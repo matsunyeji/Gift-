@@ -12,7 +12,7 @@
   const heartsBox = document.getElementById('hearts');
   const scoreEl = document.getElementById('score');
 
-  const bgImg = new Image(); bgImg.src = 'bg.png';
+ 
   const carImg = new Image(); carImg.src = 'car.png';
 
   // audio
@@ -112,17 +112,8 @@
     ctx.clearRect(0,0,w,h);
 
     // draw background image tiled vertically for a scrolling feel
-    if(bgImg.complete){
-      const imgW = bgImg.width, imgH = bgImg.height;
-      const scaleBg = w / imgW;
-      const bgHscaled = imgH * scaleBg;
-      offsetY += 0.6; // subtle auto-scroll
-      const y1 = - (offsetY % bgHscaled);
-      ctx.drawImage(bgImg, 0, 0, imgW, imgH, 0, y1, w, bgHscaled);
-      ctx.drawImage(bgImg, 0, 0, imgW, imgH, 0, y1 + bgHscaled, w, bgHscaled);
-    } else {
-      ctx.fillStyle = '#071028'; ctx.fillRect(0,0,w,h);
-    }
+    // Background now handled by CSS (#sky and #road)
+
 
     // overlay tint to make sprites pop
     ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0,0,w,h);
