@@ -17,6 +17,10 @@ body.card-page{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
+.card-page {
+    text-align: center;
+    padding: 40px;
+}
 
 .card-wrap{width:100%;max-width:980px;padding:36px}
 
@@ -68,11 +72,24 @@ body.card-page{
 }
 
 /* ------------- game page styles ------------- */
-body.game-page{
-  background: url('bg.png') center/cover no-repeat fixed;
-  font-family: Inter, system-ui, Arial, sans-serif;
-  color:#fff;
+#gameArea {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+
+    background-image: url('bg.png');
+    background-size: cover;        /* fits the screen */
+    background-repeat: repeat-y;   /* repeats vertically */
+    background-position: center; 
+    animation: moveBg 2s linear infinite;
 }
+
+@keyframes moveBg {
+    from { background-position-y: 0; }
+    to { background-position-y: 100%; }
+}
+
 
 #gameRoot{position:relative;max-width:980px;margin:0 auto;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
 #gameCanvas{border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6);background:transparent;display:block;width:100%;max-width:420px;height:auto}
