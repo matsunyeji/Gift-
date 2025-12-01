@@ -1,29 +1,37 @@
 /* Shared layout & styling */
 :root{
-  --accent:#ff4fa3;
-  --bg-dark:#071028;
-  --card-bg: linear-gradient(180deg,#0b1220,#0f2140);
-  --glass: rgba(255,255,255,0.06);
-  --glass-strong: rgba(255,255,255,0.08);
+  --card-bg: url('assets/paper-bg.png');  /* your vintage bg */
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  backdrop-filter: blur(4px);
+  max-width: 600px;
+  margin: 50px auto;
 }
 
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;}
 
 /* ---------------- index / card page ---------------- */
-.card-page{
-  background: var(--card-bg);
-  display:flex;align-items:center;justify-content:center;padding:28px;
-  background-image: url('assets/bg.png');
+.card-page {
+  background-image: var(--card-bg);
   background-size: cover;
-  background-position:center;
+  background-position: center;
   background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
 }
 
 .card-wrap{width:100%;max-width:980px}
 .card{
   background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  border-radius:18px;padding:26px;backdrop-filter: blur(6px);color:#fff;box-shadow:0 18px 40px rgba(0,0,0,0.6);
+  border-radius:18px;padding:26px;backdrop-filter: blur(6px);color:#000;box-shadow:0 18px 40px rgba(0,0,0,0.6);
 }
 .title{font-size:clamp(1.6rem,4vw,2.6rem);margin:0 0 10px;text-align:center;text-shadow:0 3px 22px rgba(255,80,150,0.12)}
 
