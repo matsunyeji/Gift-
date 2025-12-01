@@ -18,9 +18,18 @@ body.card-page{
   -moz-osx-font-smoothing:grayscale;
 }
 .card-page {
-    text-align: center;
-    padding: 40px;
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* vertically centers everything */
+    align-items: center;       /* horizontally centers everything */
+
+    text-align: center;        /* centers the text itself */
+    padding: 30px;
 }
+
 
 .card-wrap{width:100%;max-width:980px;padding:36px}
 
