@@ -56,106 +56,39 @@ body.card-page{
 }
 
 /* ---------------- GAME PAGE ---------------- */
-body.game-page{
-    margin:0;
-    overflow:hidden;
-    background:#000; /* safety background */
-}
+<body class="game-page">
 
-/* Moving road only */
-#road{
-    position:absolute;
-    inset:0;
-    background:url('road.png') center/cover repeat-y;
-    animation:moveRoad 1.4s linear infinite;
-    z-index:1;
-}
+  <!-- SKY (behind everything) -->
+  <div id="sky"></div>
 
-@keyframes moveRoad {
-    from { background-position-y:0; }
-    to   { background-position-y:100%; }
-}
+  <!-- MOVING ROAD -->
+  <div id="road"></div>
 
-/* Sky stays still */
-#sky{
-    position:absolute;
-    inset:0;
-    background:url('sky.png') center/cover no-repeat;
-    z-index:0;
-}
+  <!-- CAR IMAGE -->
+  <img id="car" src="car.png" alt="Car">
 
-/* Car */
-#car{
-    position:absolute;
-    bottom:30px;
-    left:50%;
-    transform:translateX(-50%);
-    width:120px;
-    height:auto;
-    z-index:10;
-}
+  <div id="gameRoot">
+    <canvas id="gameCanvas" width="420" height="720" aria-label="Birthday racing game"></canvas>
 
-/* Canvas (if used) */
-#gameCanvas{
-    position:absolute;
-    inset:0;
-    margin:auto;
-    width:100%;
-    max-width:420px;
-    height:100vh;
-    z-index:5;
-    background:transparent;
-}
+    <div id="hud" aria-hidden="true">
+      <div id="hearts" aria-live="polite"></div>
+      <div id="score">Score: 0</div>
+    </div>
 
-/* Controls */
-#touchControls{
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:14px;
-    z-index:20;
-}
+    <div id="touchControls" aria-hidden="true">
+      <button id="leftBtn" class="ctl">◀</button>
+      <button id="rightBtn" class="ctl">▶</button>
+    </div>
 
-.ctl{
-    width:70px;
-    height:60px;
-    background:rgba(255,255,255,0.9);
-    border-radius:12px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:22px;
-    color:#000;
-}
+    <div id="overlay" role="dialog" aria-hidden="true">
+      <h2 id="overlayTitle">Tap to Start</h2>
+      <div id="overlayText">Tap anywhere to begin (this enables music)</div>
+      <div id="overlayBtns">
+        <button id="restart" class="primary-btn">Restart</button>
+        <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
+      </div>
+    </div>
+  </div>
 
-/* HUD */
-#hud{
-    position:absolute;
-    top:20px;
-    left:20px;
-    z-index:20;
-    display:flex;
-    gap:10px;
-}
-
-#score{
-    padding:6px 14px;
-    background:white;
-    border-radius:10px;
-    font-weight:bold;
-}
-
-/* Overlay (game over screen) */
-#overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.7);
-    display:none;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    z-index:100;
-    color:#fff;
-}
+  <script src="script.js"></script>
+</body>
