@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Happy Birthday Garv — Card</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -12,7 +12,7 @@
       <h1 class="title">🎉 Happy Birthday Garv! 🎉</h1>
 
       <div class="message-wrap">
-        <div id="typewriter" class="message"></div>
+        <div id="typewriter" class="message" aria-live="polite"></div>
       </div>
 
       <div class="footer-row">
@@ -23,57 +23,66 @@
     </div>
   </main>
 
-  <!-- preload music so Start Game counts as a gesture -->
-  <audio id="preloadAudio" src="assets/music.mp3" preload="auto"></audio>
+  <!-- Preload audio so the click counts as a gesture -->
+  <audio id="preloadAudio" src="music.mp3" preload="auto"></audio>
 
 <script>
-/* ----- Typewriter (medium speed) ----- */
-const TEXT = `Bhaiii tysm for guiding me and explaining things to me for hours like literally saving me every single time. And fr tg that you initiated that convo in the Live Insaan server varna hum aaj dost hi nahi hote ;-; (but aap catfish hote hote bach gaye 💀). Anyways ab toh we homies bro daily tea spilling aur aapko gossip karne mein majboor kar diya hai humne lol 😂. You’re genuinely an amazing and nice guy, sabka aur mera acha sochne ke liye dhanyawaad!Just be that way always… bas thoda gym shym jao aur body banao kya pata koi aapko ched de toh Cynthia poch nahi payegi 💔💀. Lwky love your music taste ekdum slayyy (95% match 🥹) and your crazy humor 💀. Waise Sorry but I drag you into all my kands because bro… ab toh you are the fire brigade aka Taarak Mehta 😭🙏 and main obviously Jethiya 😃 (ik ye line sachme ajeeb thi). God bless you Bhauu! Enjoy your special day. And all the bestest for tmrw's physics paper AAG LAGA DENAAA 🔥 Once Again Happiest birthday Garvitaa 🎀`;
+/* ---------- TYPEWRITER TEXT (medium speed) ---------- */
+const TEXT = `Bhaiii tysm for guiding me and explaining things to me for hours like literally saving me every single time. And fr tg that you initiated that convo in the Live Insaan server varna hum aaj dost hi nahi hote ;-; (but aap catfish hote hote bach gaye 💀).
+
+Anyways ab toh we homies bro daily tea spilling aur aapko gossip karne mein majboor kar diya hai humne lol 😂.
+
+You’re genuinely an amazing and nice guy, sabka aur mera acha sochne ke liye dhanyawaad! Just be that way always… bas thoda gym shym jao aur body banao kya pata koi aapko ched de toh Cynthia poch nahi payegi 💔💀.
+
+Lwky love your music taste ekdum slayyy (95% match 🥹) and your crazy humor 💀.
+
+Waise Sorry but I drag you into all my kands because bro… ab toh you are the fire brigade aka Taarak Mehta 😭🙏 and main obviously Jethiya 😃 (ik ye line sachme ajeeb thi).
+
+God bless you Bhauu! Enjoy your special day.
+
+And all the bestest for tmrw's physics paper AAG LAGA DENAAA 🔥
+
+Once Again Happiest birthday Garvitaa 🎀`;
 
 const target = document.getElementById('typewriter');
-const speed = 28; // medium (ms per char)
-let i=0;
+const speed = 28; // ms per char (medium)
+let i = 0;
 
 function typeNext(){
   if(i < TEXT.length){
-    // convert newline-ish sequences to <br> for rendering
-    const ch = TEXT[i];
-    if(ch === '\n') {
-      target.innerHTML += '<br>';
-    } else {
-      // escape HTML
+    const ch = TEXT[i++];
+    if(ch === '\n') target.innerHTML += '<br>';
+    else {
       const escaped = ch.replace && ch.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       target.innerHTML += escaped;
     }
-    i++;
-    // small extra pause after periods/commas for natural rhythm
     const last = TEXT[i-1];
     let extra = 0;
-    if(last === '.' || last === '!' || last === '?') extra = 180;
-    else if(last === ',' || last === ';') extra = 70;
+    if(last === '.' || last === '!' || last === '?') extra = 160;
+    else if(last === ',' || last === ';') extra = 50;
     setTimeout(typeNext, speed + extra);
   } else {
-    // done — small glow effect
     target.classList.add('typed-done');
   }
 }
 
-/* start auto-typing once page is visible */
 document.addEventListener('DOMContentLoaded', ()=> {
-  // slight initial delay
-  setTimeout(typeNext, 600);
+  setTimeout(typeNext, 400);
 });
 
-/* Start Game click: play audio (gesture) and navigate */
+/* ---------- Start Game button: create gesture and navigate ---------- */
 const startBtn = document.getElementById('startBtn');
 const audio = document.getElementById('preloadAudio');
 
 startBtn.addEventListener('click', async () => {
+  // play to register a user gesture (some browsers require this)
   try { await audio.play(); } catch(e){ /* ignore */ }
+  // mark gesture so game page can auto-play music
   sessionStorage.setItem('birthday_gesture','1');
-  // tiny delay to ensure the gesture registers
-  setTimeout(()=> location.href = 'game.html', 140);
+  // small delay then navigate
+  setTimeout(()=> location.href = 'game.html', 120);
 });
 </script>
 </body>
 </html>
+
