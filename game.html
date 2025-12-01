@@ -390,5 +390,14 @@ setInterval(()=>{
 
 </script>
   <script src="script.js"></script>
+  <script>
+  const bgm = new Audio("music.mp3");
+  bgm.loop = true;
+
+  document.body.addEventListener("click", () => {
+    bgm.play().catch(() => {});
+  }, { once: true });
+</script>
+
 </body>
 </html>
