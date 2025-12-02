@@ -6,37 +6,40 @@
 <title>Birthday Race — Game</title>
 <link rel="stylesheet" href="style.css?v=1.1">
 
-</head>
-<body class="game-page">
-  <div id="sky"></div>
-<div id="road"></div>
-<img id="car" src="car.png" alt="Car">
+</head><body class="game-page">
 
+  <!-- temporary button to unlock audio -->
+  <button id="startBtn">Start Game</button>
+  <audio id="bgm" src="music.mp3" loop></audio>
+
+  <div id="sky"></div>
+  <div id="road"></div>
+  <img id="car" src="car.png" alt="Car">
 
   <div id="gameRoot">
-    <canvas id="gameCanvas" width="420" height="720" aria-label="Birthday racing game"></canvas>
+      <canvas id="gameCanvas" width="420" height="720" aria-label="Birthday racing game"></canvas>
 
-    <div id="hud" aria-hidden="true">
-      <div id="hearts" aria-live="polite"></div>
-      <div id="score">Score: 0</div>
-    </div>
-
-    <div id="touchControls" aria-hidden="true">
-      <button id="leftBtn" class="ctl">◀</button>
-      <button id="rightBtn" class="ctl">▶</button>
-    </div>
-
-    <div id="overlay" role="dialog" aria-hidden="true">
-      <h2 id="overlayTitle">Tap to Start</h2>
-      <div id="overlayText">Tap anywhere to begin (this enables music)</div>
-      <div id="overlayBtns">
-        <button id="restart" class="primary-btn">Restart</button>
-        <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
+      <div id="hud" aria-hidden="true">
+        <div id="hearts" aria-live="polite"></div>
+        <div id="score">Score: 0</div>
       </div>
-    </div>
+
+      <div id="touchControls" aria-hidden="true">
+        <button id="leftBtn" class="ctl">◀</button>
+        <button id="rightBtn" class="ctl">▶</button>
+      </div>
+
+      <div id="overlay" role="dialog" aria-hidden="true">
+        <h2 id="overlayTitle">Tap to Start</h2>
+        <div id="overlayText">Tap anywhere to begin (this enables music)</div>
+        <div id="overlayBtns">
+          <button id="restart" class="primary-btn">Restart</button>
+          <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
+        </div>
+      </div>
   </div>
 
-  <!-- music is referenced in script.js (played after gesture) -->
   <script src="script.js"></script>
 </body>
+  
 </html>
