@@ -1,153 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Car Game</title>
 
-<style>
-    body.game-page {
-        margin: 0;
-        padding: 0;
-        overflow: hidden !important;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        touch-action: none;
-    }
+<title>Birthday Race — Game</title>
 
-    #sky {
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 40%;
-        background: url("sky.png") center/cover no-repeat;
-        z-index: -3;
-    }
-
-    #road {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 60%;
-        background: url("bg.png") repeat-y center;
-        background-size: cover;
-        animation: moveBg 0.25s linear infinite;
-        z-index: -2;
-    }
-
-    @keyframes moveBg {
-        from { background-position-y: 0; }
-        to   { background-position-y: 512px; }
-    }
-
-    #gameRoot {
-        position: relative;
-        width: 400px;
-        height: 600px;
-    }
-
-    #gameCanvas {
-        background: transparent;
-        width: 100%;
-        height: 100%;
-        display: block;
-    }
-
-    /* HUD */
-    #score {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        color: #fff;
-        font-size: 22px;
-        font-family: Arial;
-        z-index: 10;
-    }
-
-    #hearts {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        gap: 8px;
-        z-index: 10;
-    }
-
-    .heart {
-        width: 26px;
-        height: 26px;
-        background: red;
-        clip-path: polygon(50% 80%, 0% 30%, 25% 0, 50% 20%, 75% 0, 100% 30%);
-    }
-
-    #overlay {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        text-align: center;
-        color: #fff;
-        padding: 20px;
-        font-family: Arial;
-    }
-
-    #touchControls {
-        position: absolute;
-        bottom: 20px;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 40px;
-    }
-
-    #touchControls button {
-        width: 80px;
-        height: 80px;
-        font-size: 40px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255,255,255,0.4);
-        backdrop-filter: blur(5px);
-    }
-</style>
-
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body class="game-page">
 
+    <!-- Background layers -->
     <div id="sky"></div>
     <div id="road"></div>
 
+    <!-- Tap-to-start button (required for iOS audio) -->
+    <button id="startBtn">Start Game</button>
+
+    <!-- Game container -->
     <div id="gameRoot">
+        <canvas id="gameCanvas" width="420" height="720"></canvas>
 
-        <div id="score">Score: 0</div>
-        <div id="hearts"></div>
+        <div id="hud">
+            <div id="hearts"></div>
+            <div id="score">Score: 0</div>
+        </div>
 
-        <canvas id="gameCanvas" width="400" height="600"></canvas>
-
+        <!-- Game over / instructions overlay -->
         <div id="overlay">
             <h2 id="overlayTitle"></h2>
             <p id="overlayText"></p>
-            <button id="restart">Restart</button>
+
+            <div id="overlayBtns">
+                <button id="restart" class="primary-btn">Restart</button>
+                <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back</button>
+            </div>
         </div>
-
     </div>
 
+    <!-- Touch controls -->
     <div id="touchControls">
-        <button id="leftBtn">◀</button>
-        <button id="rightBtn">▶</button>
+        <button id="leftBtn" class="ctl">◀</button>
+        <button id="rightBtn" class="ctl">▶</button>
     </div>
 
+    <!-- Audio (iOS requires a button click to start) -->
     <audio id="bgm" src="music.mp3" preload="auto"></audio>
 
-<script src="script.js"></script>
+    <!-- Game logic -->
+    <script src="script.js"></script>
 
 </body>
 </html>
