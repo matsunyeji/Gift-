@@ -14,7 +14,7 @@ html, body {
 
 /* ---------- CARD BACKGROUND ---------- */
 body {
-  background: url('card-bg.jpg') center/cover no-repeat fixed;
+  background: url('inspobg.jpg') center/cover no-repeat fixed;
   display: flex;
   align-items: center;
   justify-content: center;
