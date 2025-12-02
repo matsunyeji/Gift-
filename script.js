@@ -58,10 +58,15 @@
   }
 
   function tryStartMusic(){
-    const had = sessionStorage.getItem('birthday_gesture');
-    if(had) bgm.play().catch(()=>{});
-  }
-  // also attempt to play on first pointerdown if blocked
+  bgm.play().catch(()=>{});
+}
+
+// ALWAYS start music on the first tap
+document.addEventListener('pointerdown', () => {
+  sessionStorage.setItem('birthday_gesture', 'yes');
+  tryStartMusic();
+}, { once: true });
+attempt to play on first pointerdown if blocked
   document.addEventListener('pointerdown', ()=> bgm.play().catch(()=>{}), { once: true });
 
  function spawnObstacle(){
