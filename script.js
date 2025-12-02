@@ -16,10 +16,15 @@
   const carImg = new Image(); carImg.src = 'car.png';
   const coneImg = new Image(); coneImg.src = 'cone.png';
 
+  document.getElementById("startBtn").addEventListener("click", () => {
+  bgm.muted = false;
+  bgm.play().catch(() => {});
+  document.getElementById("startBtn").style.display = "none"; // hide button
+});
+
   // audio (loop)
-  const bgm = new Audio('music.mp3');
-  bgm.loop = true;
-  bgm.volume = 0.6;
+  const bgm = document.getElementById("bgm");
+bgm.volume = 0.6;
 
   // helper to try play (will fail silently if blocked)
   function tryStartMusic() {
