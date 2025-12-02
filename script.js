@@ -64,22 +64,19 @@
   // also attempt to play on first pointerdown if blocked
   document.addEventListener('pointerdown', ()=> bgm.play().catch(()=>{}), { once: true });
 
-  function spawnObstacle(){
-  const width = Math.round(w * 0.16); 
-  const height = Math.round(width * 1.1); 
+ function spawnObstacle(){
+  const width = Math.round(w * 0.14);
   const x = Math.random() * (w - width - 20) + 10;
-  const speed = 2 + Math.random() * 2 + score * 0.01;
-
-  obstacles.push({
-    x,
-    y: -height,
-    w: width,
-    h: height,
+  const speed = 2 + Math.random()*2 + score*0.01;
+  obstacles.push({ 
+    x, 
+    y: -80, 
+    w: width, 
+    h: Math.round(width * 1.1), 
     speed,
     img: coneImg
   });
 }
-
 
   function checkCollision(a,b){
     return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
@@ -129,14 +126,12 @@
 
     // overlay tint to make sprites pop
     ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0,0,w,h);
-
-    // obstacles
-obstacles.forEach(o => {
+//obstacles
+    obstacles.forEach(o => {
   if (o.img && o.img.complete) {
     ctx.drawImage(o.img, o.x, o.y, o.w, o.h);
   } else {
-    // fallback
-    ctx.fillStyle = '#ff9933';
+    ctx.fillStyle = '#ffb347'; // fallback cone color
     ctx.fillRect(o.x, o.y, o.w, o.h);
   }
 });
