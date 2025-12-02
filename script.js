@@ -14,6 +14,8 @@
 
  
   const carImg = new Image(); carImg.src = 'car.png';
+  const coneImg = new Image(); 
+  coneImg.src = 'cone.png';
 
   // audio
   const bgm = new Audio('music.mp3');
@@ -63,11 +65,21 @@
   document.addEventListener('pointerdown', ()=> bgm.play().catch(()=>{}), { once: true });
 
   function spawnObstacle(){
-    const width = Math.round(w * 0.14);
-    const x = Math.random() * (w - width - 20) + 10;
-    const speed = 2 + Math.random()*2 + score*0.01;
-    obstacles.push({ x, y: -80, w: width, h: Math.round(width*0.6), speed });
-  }
+  const width = Math.round(w * 0.16); 
+  const height = Math.round(width * 1.1); 
+  const x = Math.random() * (w - width - 20) + 10;
+  const speed = 2 + Math.random() * 2 + score * 0.01;
+
+  obstacles.push({
+    x,
+    y: -height,
+    w: width,
+    h: height,
+    speed,
+    img: coneImg
+  });
+}
+
 
   function checkCollision(a,b){
     return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
@@ -119,15 +131,16 @@
     ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0,0,w,h);
 
     // obstacles
-    obstacles.forEach(o => {
-      ctx.save();
-      ctx.fillStyle = '#333';
-      ctx.strokeStyle = '#111';
-      ctx.lineWidth = 2;
-      ctx.fillRect(o.x, o.y, o.w, o.h);
-      ctx.strokeRect(o.x, o.y, o.w, o.h);
-      ctx.restore();
-    });
+obstacles.forEach(o => {
+  if (o.img && o.img.complete) {
+    ctx.drawImage(o.img, o.x, o.y, o.w, o.h);
+  } else {
+    // fallback
+    ctx.fillStyle = '#ff9933';
+    ctx.fillRect(o.x, o.y, o.w, o.h);
+  }
+});
+
 
     // draw car
     if(carImg.complete){
