@@ -1,137 +1,139 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Birthday Race — Game</title>
-
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Car Game</title>
 
 <style>
-  /* Make sure sky & road backgrounds show */
-  body.game-page {
-    margin: 0;
-    overflow: hidden;
-    background: #000;
-  }
+    body.game-page {
+        margin: 0;
+        padding: 0;
+        overflow: hidden !important;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  #sky {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: url('sky.png') repeat-y center/cover;
-    z-index: -3;
-    animation: skyScroll 18s linear infinite;
-  }
-  @keyframes skyScroll { 
-    from { background-position-y: 0; }
-    to   { background-position-y: 2048px; }
-  }
+    #sky {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 40%;
+        background: url("sky.png") repeat-y center;
+        background-size: cover;
+        z-index: -3;
+    }
 
-  #road {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: url('road.png') repeat-y center/cover;
-    z-index: -2;
-    opacity: 0.9;
-    animation: roadScroll 3s linear infinite;
-  }
-  @keyframes roadScroll { 
-    from { background-position-y: 0; }
-    to   { background-position-y: 1024px; }
-  }
+    #road {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60%;
+        background: url("bg.png") repeat-y center;
+        background-size: cover;
+        animation: moveBg 0.25s linear infinite;
+        z-index: -2;
+    }
 
-  #car {
-    display: none; /* car drawn on canvas instead */
-  }
+    @keyframes moveBg {
+        from { background-position-y: 0; }
+        to   { background-position-y: 512px; }
+    }
 
-  #gameRoot {
-    position: relative;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
+    #gameRoot {
+        position: relative;
+        width: 400px;
+        height: 600px;
+    }
 
-  #gameCanvas {
-    background: transparent;
-    display: block;
-  }
+    #gameCanvas {
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
 
-  #overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.55);
-    color: white;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    z-index: 5;
-  }
+    #overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        color: #fff;
+        font-family: Arial;
+        padding: 20px;
+    }
 
-  #overlayBtns {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+    #touchControls {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 40px;
+        pointer-events: auto;
+    }
 
-  .primary-btn, .secondary-btn {
-    padding: 12px 18px;
-    border-radius: 10px;
-    border: none;
-    font-size: 18px;
-  }
+    #touchControls button {
+        width: 80px;
+        height: 80px;
+        font-size: 40px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(4px);
+    }
 
-  .primary-btn {
-    background: #ff4971;
-    color: white;
-  }
-
-  .secondary-btn {
-    background: #ddd;
-  }
-
-  #touchControls {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 15px;
-  }
-
-  .ctl {
-    font-size: 32px;
-    padding: 12px 20px;
-    border-radius: 10px;
-  }
+    #startBtn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px 40px;
+        font-size: 22px;
+        background: #fff;
+        border: none;
+        border-radius: 10px;
+        z-index: 10;
+    }
 </style>
 
 </head>
 <body class="game-page">
-  <div id="sky"></div>
-  <div id="road"></div>
 
-  <div id="gameRoot">
-      <canvas id="gameCanvas"></canvas>
+    <div id="sky"></div>
+    <div id="road"></div>
 
-      <div id="overlay">
-          <h2 id="overlayTitle"></h2>
-          <p id="overlayText"></p>
-          <button id="restart">Restart</button>
-      </div>
-  </div>
+    <button id="startBtn">Start Game</button>
 
-  <div id="touchControls">
-      <button id="leftBtn">◀</button>
-      <button id="rightBtn">▶</button>
-  </div>
+    <div id="gameRoot">
+        <canvas id="gameCanvas" width="400" height="600"></canvas>
 
-  <audio id="bgm" src="music.mp3"></audio>
+        <div id="overlay">
+            <h2 id="overlayTitle"></h2>
+            <p id="overlayText"></p>
+            <button id="restart">Restart</button>
+        </div>
+    </div>
+
+    <div id="touchControls">
+        <button id="leftBtn">◀</button>
+        <button id="rightBtn">▶</button>
+    </div>
+
+    <audio id="bgm" src="music.mp3" preload="auto"></audio>
+
+<script src="script.js"></script>
+
 </body>
-
 </html>
