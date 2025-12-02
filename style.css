@@ -100,3 +100,38 @@ body.game-page {
 #car {
     display: none; /* canvas draws car, so we hide this */
 }
+/* ---------------- GAME CANVAS FIX (iPad Safari) ---------------- */
+
+#gameCanvas {
+    width: 420px !important;
+    height: 720px !important;
+    display: block;
+    margin: 0 auto;
+    image-rendering: pixelated;
+}
+
+/* Center the whole game */
+#gameRoot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Make touch controls scale normally */
+#touchControls {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    z-index: 10;
+}
+
+#touchControls button {
+    width: 80px;
+    height: 120px;
+    font-size: 2rem;
+    border-radius: 20px;
+}
