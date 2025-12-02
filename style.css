@@ -1,6 +1,11 @@
 /* ---------------- GLOBAL ---------------- */
-*{ box-sizing: border-box; }
-html, body { margin:0; padding:0; height:100%; font-family: 'Georgia', serif; }
+* { box-sizing: border-box; }
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family: 'Georgia', serif;
+}
 
 /* ---------------- HOME PAGE ---------------- */
 body.card-page{
@@ -56,39 +61,87 @@ body.card-page{
 }
 
 /* ---------------- GAME PAGE ---------------- */
-<body class="game-page">
+body.game-page{
+    background:#87ceeb; /* fallback sky color */
+    overflow:hidden;
+}
 
-  <!-- SKY (behind everything) -->
-  <div id="sky"></div>
+/* Sky */
+#sky{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#87ceeb;
+    z-index:-3;
+}
 
-  <!-- MOVING ROAD -->
-  <div id="road"></div>
+/* Road */
+#road{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:260px;
+    height:100%;
+    background:url('road.png') repeat-y center/cover;
+    animation:scrollRoad 3s linear infinite;
+    z-index:-2;
+}
 
-  <!-- CAR IMAGE -->
-  <img id="car" src="car.png" alt="Car">
+@keyframes scrollRoad{
+    from { background-position-y:0; }
+    to { background-position-y:100%; }
+}
 
-  <div id="gameRoot">
-    <canvas id="gameCanvas" width="420" height="720" aria-label="Birthday racing game"></canvas>
+/* Car */
+#car{
+    position:fixed;
+    bottom:70px;
+    left:50%;
+    transform:translateX(-50%);
+    width:120px;
+    z-index:5;
+}
 
-    <div id="hud" aria-hidden="true">
-      <div id="hearts" aria-live="polite"></div>
-      <div id="score">Score: 0</div>
-    </div>
+/* Canvas container */
+#gameRoot{
+    position:relative;
+    width:420px;
+    margin:0 auto;
+}
 
-    <div id="touchControls" aria-hidden="true">
-      <button id="leftBtn" class="ctl">◀</button>
-      <button id="rightBtn" class="ctl">▶</button>
-    </div>
+/* Touch buttons */
+.ctl{
+    width:80px;
+    height:80px;
+    font-size:2rem;
+    border-radius:50%;
+    border:none;
+}
 
-    <div id="overlay" role="dialog" aria-hidden="true">
-      <h2 id="overlayTitle">Tap to Start</h2>
-      <div id="overlayText">Tap anywhere to begin (this enables music)</div>
-      <div id="overlayBtns">
-        <button id="restart" class="primary-btn">Restart</button>
-        <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
-      </div>
-    </div>
-  </div>
+/* HUD */
+#hud{
+    position:absolute;
+    top:10px;
+    left:10px;
+    color:white;
+    font-size:1.2rem;
+}
 
-  <script src="script.js"></script>
-</body>
+/* Overlay */
+#overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
