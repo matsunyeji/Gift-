@@ -18,8 +18,19 @@
   coneImg.src = 'cone.png';
 
   // audio
-  const bgm = new Audio('music.mp3');
-  bgm.loop = true;
+const bgm = new Audio('music.mp3');
+bgm.loop = true;
+
+// clean audio start system
+function tryStartMusic() {
+  bgm.play().catch(()=>{});
+}
+
+// ALWAYS start music on *first tap* — required by Safari
+document.addEventListener('pointerdown', () => {
+  sessionStorage.setItem('birthday_gesture', 'yes');
+  tryStartMusic();
+}, { once: true });
 
   // state
   let w = CANVAS_W, h = CANVAS_H, scale = 1;
@@ -66,8 +77,8 @@ document.addEventListener('pointerdown', () => {
   sessionStorage.setItem('birthday_gesture', 'yes');
   tryStartMusic();
 }, { once: true });
-attempt to play on first pointerdown if blocked
-  document.addEventListener('pointerdown', ()=> bgm.play().catch(()=>{}), { once: true });
+
+
 
  function spawnObstacle(){
   const width = Math.round(w * 0.14);
