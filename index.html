@@ -4,359 +4,575 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Happy Birthday — Garv</title>
-
 <style>
-/* ======================================================
-   GLOBAL + PAGE 1 + PAGE 2 — FULL PROJECT CSS
-   ====================================================== */
+  :root{
+    --bg: #0b3a37; /* Dark Emerald Teal (your pick B) */
+    --card: rgba(255,255,255,0.03);
+    --glass: rgba(255,255,255,0.04);
+    --accent: #8bd3d6;
+    --muted: #d9efe9;
+    --pink: #ffb6d6;
+    --card-radius: 18px;
+    --max-w: 880px;
+  }
 
-:root{
-  --card-w: 94%;
-  --card-max: 780px;
-  --muted: #5a3c42;
-}
+  /* Reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; -webkit-font-smoothing:antialiased}
+  body{
+    background: linear-gradient(160deg, #071f1d 0%, var(--bg) 45%, #083c3a 100%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+    overflow:hidden;
+    color:var(--muted);
+  }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{
-  height:100%;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  -webkit-font-smoothing: antialiased;
-}
-body{
-  background: linear-gradient(120deg, #e9d6ff 0%, #d5f1ff 45%, #e9f9f5 100%);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:28px;
-}
+  /* Canvas overlay (for sparkles & fireflies) */
+  canvas#fxCanvas{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    pointer-events:none;
+  }
 
-/* PAGE WRAPPERS */
-#page1, #page2{
-  width:var(--card-w);
-  max-width:var(--card-max);
-}
-#page2{ display:none; }
+  .wrap{
+    width:94%;
+    max-width:var(--max-w);
+    position:relative;
+    z-index:60; /* above canvas */
+    display:flex;
+    gap:28px;
+    align-items:flex-start;
+    justify-content:center;
+  }
 
-/* CARD */
-.card{
-  width:100%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.90));
-  border-radius:18px;
-  padding:30px 28px;
-  box-shadow:0 18px 50px rgba(92,72,84,0.12);
-  position:relative;
-  overflow:visible;
-}
+  /* Card */
+  .card{
+    width:100%;
+    max-width:780px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.03));
+    border-radius:var(--card-radius);
+    padding:28px;
+    box-shadow: 0 20px 60px rgba(2,10,9,0.55);
+    backdrop-filter: blur(6px) saturate(120%);
+    border: 1px solid rgba(255,255,255,0.03);
+    position:relative;
+    overflow:hidden;
+  }
 
-/* TITLE */
-.title{
-  font-size:clamp(1.4rem,3.8vw,2rem);
-  text-align:center;
-  color:#7b3b60;
-  margin-bottom:14px;
-  font-weight:800;
-}
+  /* Decorative glow behind card for majestic vibe */
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:-30%;
+    background: radial-gradient(circle at 10% 10%, rgba(139,211,214,0.06), transparent 8%),
+                radial-gradient(circle at 90% 90%, rgba(255,182,214,0.03), transparent 6%);
+    pointer-events:none;
+    z-index:0;
+  }
 
-/* TYPEWRITER TEXT */
-.typing{
-  font-size:clamp(1rem,2.4vw,1.06rem);
-  color:var(--muted);
-  line-height:1.6;
-  min-height:160px;
-  padding:6px 8px;
-  border-radius:10px;
-  margin-bottom:18px;
-}
+  h1.title{
+    font-size:clamp(1.4rem, 3.6vw, 2rem);
+    text-align:center;
+    color: #e8f9f6;
+    margin-bottom:12px;
+    letter-spacing:0.3px;
+    z-index:1;
+    position:relative;
+  }
 
-/* BUTTONS */
-.controls{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-}
-.btn{
-  background:linear-gradient(135deg,#ffd6f0,#a6fff2);
-  border:none;
-  padding:12px 20px;
-  border-radius:14px;
-  font-size:1.02rem;
-  font-weight:700;
-  cursor:pointer;
-  color:#2b2b2b;
-  box-shadow:0 8px 30px rgba(123,76,110,0.12);
-  transition:transform .18s ease;
-}
-.btn:active{ transform:translateY(1px) scale(.99) }
-.btn.played{ opacity:.9; transform:scale(.98) }
+  /* reveal container */
+  .typing-wrap{
+    position:relative;
+    z-index:1;
+    margin-top:6px;
+  }
 
-/* FOOTER NOTE */
-.note{
-  margin-top:18px;
-  text-align:center;
-  color:#6b3d4a;
-  font-style:italic;
-}
+  .typing{
+    font-size:clamp(1rem, 2.2vw, 1.05rem);
+    color: #e6f7f4;
+    line-height:1.7;
+    max-height: 360px;         /* visible area */
+    overflow-y: auto;         /* scroll if message longer */
+    padding:14px 16px;
+    border-radius:12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.02);
+    box-shadow: inset 0 4px 18px rgba(0,0,0,0.25);
+    -webkit-overflow-scrolling: touch;
+    white-space:pre-wrap;
+  }
 
-/* CONFETTI */
-.confetti{
-  position:absolute;
-  pointer-events:none;
-  border-radius:3px;
-  opacity:.98;
-  animation:confetti-fall 2s linear forwards;
-}
-@keyframes confetti-fall{
-  0%{transform:translateY(0) rotate(0);opacity:1}
-  100%{transform:translateY(220px) rotate(420deg);opacity:0}
-}
+  /* small hint */
+  .hint{
+    text-align:center;
+    margin-top:12px;
+    color:rgba(230,247,243,0.7);
+    font-size:0.95rem;
+  }
 
-/* SPARKLES */
-.spark{
-  position:absolute;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.2)60%);
-  filter:blur(.6px);
-  opacity:.95;
-  transform:translate(-50%,-50%);
-  animation:spark-rise 1.2s ease-out forwards;
-}
-@keyframes spark-rise{
-  from{transform:translate(-50%,-50%) scale(1);opacity:1}
-  to{transform:translate(-50%,-120%) scale(.4);opacity:0}
-}
+  .controls{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:18px;
+    z-index:1;
+    position:relative;
+  }
 
-/* ============================================
-   PAGE 2 — FUN INTERACTIVE PAGE
-   ============================================ */
+  button.btn{
+    background: linear-gradient(135deg, #9ff3e9, #b8ffd6);
+    color: #072b27;
+    border: none;
+    padding:12px 18px;
+    border-radius:12px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow: 0 10px 30px rgba(8,34,33,0.28);
+    transition: transform .16s ease, box-shadow .16s ease, opacity .2s;
+  }
+  button.btn:active { transform: translateY(1px) scale(.995) }
+  button.btn[disabled]{ opacity:0.6; cursor:not-allowed }
 
-#page2{
-  animation:fadeInPage .7s ease forwards;
-}
-@keyframes fadeInPage{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:translateY(0)}
-}
+  /* small accent */
+  .accent-strip{
+    height:6px;
+    width:100%;
+    margin-top:14px;
+    border-radius:8px;
+    background: linear-gradient(90deg, rgba(139,211,214,0.22), rgba(255,182,214,0.10));
+    box-shadow: 0 6px 18px rgba(11,58,55,0.18) inset;
+  }
 
-.page2-title{
-  font-size:clamp(1.4rem,3.8vw,2rem);
-  color:#7b3b60;
-  font-weight:800;
-  text-align:center;
-  margin-bottom:10px;
-}
+  /* small footer note */
+  .note{
+    margin-top:14px;
+    font-style:italic;
+    color:rgba(230,247,243,0.8);
+    text-align:center;
+  }
 
-.page2-note{
-  text-align:center;
-  color:#6b3d4a;
-  margin-bottom:18px;
-  font-size:1rem;
-}
+  /* small sparkle hint overlay (for the visual cinematic flash) */
+  .cinematic-flash{
+    pointer-events:none;
+    position:absolute;
+    inset:0;
+    z-index:55;
+    opacity:0;
+    transition: opacity .35s ease;
+    background: radial-gradient(circle at 50% 35%, rgba(255,255,255,0.06), transparent 18%);
+    mix-blend-mode: screen;
+  }
 
-/* BALLOONS */
-.balloon{
-  position:absolute;
-  width:60px;
-  height:80px;
-  background:radial-gradient(circle at 50% 35%,#ffb6c9,#ff87ab);
-  border-radius:50% 50% 48% 48%;
-  animation:floatUp 6s ease-in-out infinite;
-  cursor:pointer;
-}
-@keyframes floatUp{
-  0%{transform:translateY(0) translateX(0)}
-  50%{transform:translateY(-40px) translateX(10px)}
-  100%{transform:translateY(0) translateX(0)}
-}
-.balloon::after{
-  content:"";
-  position:absolute;
-  width:2px;
-  height:40px;
-  background:rgba(0,0,0,0.15);
-  left:50%;
-  bottom:-40px;
-  transform:translateX(-50%);
-}
-
-/* POP */
-@keyframes popBalloon{
-  0%{transform:scale(1);opacity:1}
-  100%{transform:scale(0);opacity:0}
-}
-
-/* RUNAWAY BUTTON */
-.catch-btn{
-  margin-top:40px;
-  background:linear-gradient(135deg,#ffd6f0,#a6fff2);
-  padding:12px 20px;
-  border-radius:14px;
-  border:none;
-  font-weight:700;
-  font-size:1.02rem;
-  cursor:pointer;
-  color:#2b2b2b;
-  box-shadow:0 8px 30px rgba(123,76,110,0.12);
-  position:relative;
-  transition:transform .18s ease, left .2s ease, top .2s ease;
-}
-.catch-btn:hover{
-  transform:scale(1.06);
-}
-
-@media(max-width:480px){
-  .card{padding:20px}
-  .typing{min-height:140px}
-  .btn{width:100%}
-}
+  /* Mobile tweaks */
+  @media (max-width:520px){
+    body{ padding:18px }
+    .typing{ max-height: 260px; padding:12px; }
+  }
 </style>
 </head>
-
 <body>
+  <!-- canvas for particle FX -->
+  <canvas id="fxCanvas"></canvas>
 
-<!-- ========================================================
-     PAGE 1
-======================================================== -->
-<div id="page1">
-  <main class="card">
-    <h1 class="title">🎉 Happy Birthday Garv! 🎉</h1>
+  <main class="wrap" role="main" aria-labelledby="title">
+    <section class="card" id="mainCard" aria-live="polite">
+      <h1 id="title" class="title">🎉 Happy Birthday Garv! 🎉</h1>
 
-    <div id="message" class="typing"></div>
+      <div class="typing-wrap">
+        <div id="message" class="typing" aria-atomic="true" aria-live="polite"></div>
+      </div>
 
-    <div class="controls">
-      <button id="musicBtn" class="btn">💗 Play Music & Open</button>
-    </div>
+      <div class="controls" style="margin-top:16px;">
+        <button id="musicBtn" class="btn" aria-label="Play music & reveal">💗 Play Music & Reveal</button>
+        <button id="skipBtn" class="btn" style="background:linear-gradient(135deg,#ffd6f0,#ffc2e1);">✨ Instant Reveal</button>
+      </div>
 
-    <div class="note">— with lots of kasht taken by your homie</div>
+      <div class="accent-strip" aria-hidden="true"></div>
+      <div class="note">— with lots of kasht taken by your homie</div>
+
+      <div class="cinematic-flash" id="flash"></div>
+    </section>
   </main>
-</div>
 
-<!-- ========================================================
-     PAGE 2 — INTERACTIVE FUN
-======================================================== -->
-<div id="page2">
-  <main class="card">
-
-    <h2 class="page2-title">🎈 Bonus Fun Page 🎈</h2>
-    <p class="page2-note">Pop the balloons & try to click the running button 😭💗</p>
-
-    <!-- Balloons container -->
-    <div id="balloonArea" style="position:relative; height:320px; margin-top:10px;"></div>
-
-    <!-- Runaway button -->
-    <div style="text-align:center;">
-      <button id="runBtn" class="catch-btn">Catch Me 😭</button>
-    </div>
-
-  </main>
-</div>
-
-<!-- Audio -->
-<audio id="bgMusic" src="music.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="music.mp3" preload="auto"></audio>
 
 <script>
-/* ============================================================
-   TYPEWRITER TEXT
-============================================================ */
-const TEXT = `Bhaiii tysm for guiding me and explaining things to me for hours... (your full message here)`;
+/* -------------------------
+   Setup & constants
+   ------------------------- */
+const MSG = `Bhaiii tysm for guiding me and explaining things to me for hours like literally saving me every single time. And fr tg that you initiated that convo in the Live Insaan server varna hum aaj dost hi nahi hote ;-; (but aap catfish hote hote bach gaye 💀).
 
-const msg = document.getElementById("message");
-let i = 0;
-function type(){
-  if(i < TEXT.length){
-    const ch = TEXT[i++];
-    msg.innerHTML += (ch === "\n" ? "<br>" : ch);
-    setTimeout(type, 20 + (".!?".includes(ch) ? 140 : (",;".includes(ch) ? 60 : 0)));
+Anyways ab toh we homies bro daily tea spilling aur aapko gossip karne mein majboor kar diya hai humne lol 😂.
+
+You’re genuinely an amazing and nice guy, sabka aur mera acha sochne ke liye dhanyawaad! Just be that way always… bas thoda gym shym jao aur body banao kya pata koi aapko ched de toh Cynthia poch nahi payegi 💔💀.
+
+Lwky love your music taste ekdum slayyy (95% match 🥹) and your crazy humor 💀.
+
+Waise Sorry but I drag you into all my kands because bro… ab toh you are the fire brigade aka Taarak Mehta 😭🙏 and main obviously Jethiya 😃 (ik ye line sachme ajeeb thi).
+
+God bless you Bhauu! Enjoy your special day.
+
+And all the bestest for tmrw's physics paper AAG LAGA DENAAA 🔥
+
+Once Again Happiest birthday Garvitaa 🎀`;
+
+const canvas = document.getElementById('fxCanvas');
+const ctx = canvas.getContext('2d');
+let W = innerWidth, H = innerHeight;
+canvas.width = W; canvas.height = H;
+const centerX = () => innerWidth/2;
+const centerY = () => innerHeight/2;
+
+/* particle arrays */
+let burstParticles = [];
+let fireflies = [];
+let runningAutoFireflies = false;
+let fxAnimationId = null;
+
+/* UI elements */
+const musicBtn = document.getElementById('musicBtn');
+const skipBtn = document.getElementById('skipBtn');
+const bgm = document.getElementById('bgMusic');
+const messageEl = document.getElementById('message');
+const flash = document.getElementById('flash');
+const mainCard = document.getElementById('mainCard');
+
+/* adapt canvas size */
+function resize(){
+  W = innerWidth; H = innerHeight;
+  canvas.width = W; canvas.height = H;
+}
+addEventListener('resize', resize);
+
+/* utility rand */
+const rand = (a,b)=> a + Math.random()*(b-a);
+
+/* -------------------------
+   Particle models
+   ------------------------- */
+
+/* Burst particle - moves from random edge toward camera (center), scale up & fade */
+class BurstParticle {
+  constructor(){
+    // spawn around edges (random radial)
+    const edge = Math.random();
+    if(edge < 0.33){
+      this.x = Math.random()*W; this.y = -20;
+    } else if(edge < 0.66){
+      this.x = Math.random()*W; this.y = H+20;
+    } else {
+      if(Math.random() < 0.5){ this.x = -20; this.y = Math.random()*H; }
+      else { this.x = W+20; this.y = Math.random()*H; }
+    }
+    // target = slightly in front of center to produce z-depth
+    this.tx = centerX() + rand(-60,60);
+    this.ty = centerY() + rand(-80,80);
+
+    // velocity toward target
+    const dx = this.tx - this.x, dy = this.ty - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    this.vx = dx / (dist / rand(14,26)); // tuned speed
+    this.vy = dy / (dist / rand(14,26));
+
+    this.size = rand(2.5,6);
+    this.baseSize = this.size;
+    this.life = rand(700,1000); // ms
+    this.age = 0;
+    // color palette: pearly teal + warm pink + gold
+    const palettes = [['#CFF7F3','#8CEAD7','#A6FFF2'], ['#FFB6D6','#FFD1A9','#FFD8B0'], ['#FFF3A6','#FDE7C7','#FBE7F4']];
+    const pal = palettes[Math.floor(Math.random()*palettes.length)];
+    this.color = pal[Math.floor(Math.random()*pal.length)];
+    // slight rotation/twinkle
+    this.alpha = 0;
+  }
+  update(dt){
+    this.age += dt;
+    // move
+    this.x += this.vx * (dt/16.6);
+    this.y += this.vy * (dt/16.6);
+
+    // approach target and grow a little then fade
+    const t = Math.min(1, this.age / this.life);
+    this.alpha = (t < 0.6) ? (t/0.6) : (1 - (t-0.6)/0.4);
+    this.size = this.baseSize * (1 + 1.4 * t);
+  }
+  draw(ctx){
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+    // glow
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size*6);
+    g.addColorStop(0, this.color);
+    g.addColorStop(0.35, this.color + '66');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size*3.2, 0, Math.PI*2);
+    ctx.fill();
+
+    // core
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+  isDead(){ return this.age >= this.life; }
+}
+
+/* Firefly - slow floating ambient lights around card */
+class Firefly {
+  constructor(cardRect){
+    // spawn near cardRect
+    const pad = 18;
+    this.x = rand(cardRect.left - pad, cardRect.right + pad);
+    this.y = rand(cardRect.top - pad, cardRect.bottom + pad);
+    this.vx = rand(-0.04,0.04);
+    this.vy = rand(-0.02,0.02);
+    this.size = rand(1.8,3.8);
+    this.baseSize = this.size;
+    this.alpha = rand(0.25,0.9);
+    this.osc = Math.random()*Math.PI*2;
+    this.color = (Math.random() < 0.6) ? '#9ff3e9' : '#ffd6f0';
+  }
+  update(dt){
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
+    this.osc += dt*0.004;
+    this.alpha = 0.4 + 0.6 * (0.5 + 0.5*Math.sin(this.osc));
+  }
+  draw(ctx){
+    ctx.save();
+    const r = this.size;
+    // gentle glow
+    const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r*6);
+    g.addColorStop(0, this.color);
+    g.addColorStop(0.3, this.color + '66');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.globalAlpha = this.alpha * 0.95;
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, r*3.2, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = this.color;
+    ctx.globalAlpha = this.alpha;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, r, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
   }
 }
 
-/* ============================================================
-   AUDIO + PAGE TRANSITION
-============================================================ */
-const musicBtn = document.getElementById("musicBtn");
-const bgm = document.getElementById("bgMusic");
+/* -------------------------
+   Particle system loop
+   ------------------------- */
+let lastTime = performance.now();
+function fxLoop(now){
+  const dt = now - lastTime;
+  lastTime = now;
+  // clear
+  ctx.clearRect(0,0,W,H);
 
-musicBtn.addEventListener("click", async ()=>{
-  try{ await bgm.play(); }catch(e){}
-  bgm.loop = true;
-  bgm.volume = 0.85;
+  // update burst particles
+  for(let i = burstParticles.length-1; i >= 0; --i){
+    const p = burstParticles[i];
+    p.update(dt);
+    p.draw(ctx);
+    if(p.isDead()) burstParticles.splice(i,1);
+  }
 
-  if(i === 0) setTimeout(type, 300);
+  // update fireflies
+  for(let i = fireflies.length-1; i >= 0; --i){
+    const f = fireflies[i];
+    f.update(dt);
+    f.draw(ctx);
+    // keep them cycling; never remove (unless many)
+  }
+
+  fxAnimationId = requestAnimationFrame(fxLoop);
+}
+
+/* start/stop FX loop */
+function startFXLoop(){
+  if(!fxAnimationId){
+    lastTime = performance.now();
+    fxAnimationId = requestAnimationFrame(fxLoop);
+  }
+}
+function stopFXLoop(){
+  if(fxAnimationId){
+    cancelAnimationFrame(fxAnimationId);
+    fxAnimationId = null;
+  }
+}
+
+/* -------------------------
+   Triggers: Sparkle Burst Toward Screen (A)
+   and Fireflies (E)
+   ------------------------- */
+
+function triggerSparkleBurst({count=80, duration=950} = {}){
+  // spawn many burst particles; they will move toward center and fade (Z rush)
+  burstParticles = [];
+  for(let i=0;i<count;i++) burstParticles.push(new BurstParticle());
+  startFXLoop();
+
+  // small cinematic flash on card
+  flash.style.opacity = '1';
+  setTimeout(()=> flash.style.opacity = '0', 260);
+
+  // after duration, slowly allow particles to finish and then keep ambient fireflies
+  setTimeout(()=> {
+    // allow burstParticles to drain out naturally (they remove themselves)
+    // keep ambient fireflies running
+  }, duration);
+}
+
+/* Fireflies: ambient lights around the card area */
+function startFireflies(count=10){
+  if(runningAutoFireflies) return;
+  runningAutoFireflies = true;
+  const rect = mainCard.getBoundingClientRect();
+  fireflies = [];
+  for(let i=0;i<count;i++) fireflies.push(new Firefly(rect));
+  // add a small generator to occasionally respawn near card
+  setInterval(()=> {
+    if(fireflies.length < 16){
+      fireflies.push(new Firefly(mainCard.getBoundingClientRect()));
+    }
+  }, 1400);
+  startFXLoop();
+}
+
+/* -------------------------
+   Typewriter & reveal sequencing
+   ------------------------- */
+
+let idx = 0;
+let typingHandle = null;
+const TYPE_SPEED = 22;
+
+function typeStep(){
+  if(idx >= MSG.length){
+    // done
+    return;
+  }
+  const ch = MSG[idx++];
+  messageEl.innerHTML += (ch === '\n' ? '<br>' : ch);
+  // keep the scroll at bottom so user sees new lines
+  messageEl.scrollTop = messageEl.scrollHeight;
+  let extra = 0;
+  if (".!?".includes(ch)) extra = 140;
+  else if (",;".includes(ch)) extra = 50;
+  typingHandle = setTimeout(typeStep, TYPE_SPEED + extra);
+}
+
+function revealWithTypewriter(){
+  // ensure clear first
+  messageEl.innerHTML = '';
+  idx = 0;
+  // small fade in of card content
+  mainCard.style.transform = 'translateY(0)';
+  // start typing after a tiny delay
+  setTimeout(()=> {
+    typeStep();
+  }, 180);
+}
+
+/* Instant reveal (skip) */
+function instantReveal(){
+  if(typingHandle) clearTimeout(typingHandle);
+  messageEl.innerHTML = MSG.replace(/\n/g,'<br>');
+  messageEl.scrollTop = messageEl.scrollHeight;
+}
+
+/* -------------------------
+   Button handler orchestration
+   ------------------------- */
+
+let clicked = false;
+
+musicBtn.addEventListener('click', async ()=>{
+  if(clicked) return;
+  clicked = true;
+
+  // play music (catch errors gracefully)
+  try{
+    await bgm.play();
+    bgm.loop = true;
+    bgm.volume = 0.82;
+  } catch(e){
+    // Play may fail on some browsers without gesture; but click is gesture, so should work
+    console.warn('Audio play blocked or errored:', e);
+  }
 
   musicBtn.disabled = true;
-  musicBtn.textContent = "🎵 Playing...";
-  musicBtn.classList.add("played");
+  musicBtn.textContent = '✨ Revealing...';
 
-  // switch to Page 2 after typing finishes:
-  setTimeout(()=>{ 
-    document.getElementById("page1").style.display="none";
-    document.getElementById("page2").style.display="block";
-    spawnBalloons();
-  }, 5000);
+  // start big sparkle burst toward screen (A)
+  triggerSparkleBurst({count:90, duration:900});
+
+  // after small cinematic window, show the message
+  setTimeout(()=> {
+    // show persistent fireflies (E)
+    startFireflies(10);
+    // begin typewriter reveal
+    revealWithTypewriter();
+    musicBtn.textContent = '🎵 Playing';
+  }, 640);
 });
 
-/* ============================================================
-   CONFETTI + SPARKLES (shared)
-============================================================ */
-function spawnConfetti(x,y,count=20){
-  for(let k=0;k<count;k++){
-    const d=document.createElement("div");
-    d.className="confetti";
-    const size=6+Math.random()*10;
-    d.style.width=size+"px";
-    d.style.height=(size*0.6)+"px";
-    d.style.left=(x+Math.random()*40-20)+"px";
-    d.style.top=(y+Math.random()*20-10)+"px";
-    d.style.background = ["#FFB6C1","#FFD1A9","#C6E6FF","#EAD7FF","#B8F3D6"][Math.floor(Math.random()*5)];
-    document.body.appendChild(d);
-    setTimeout(()=>d.remove(),2000);
+/* skip button for instant reveal */
+skipBtn.addEventListener('click', ()=>{
+  // also start fireflies & stop any burst
+  startFireflies(10);
+  instantReveal();
+  // fade a tiny flash for feedback
+  flash.style.opacity = '0.6';
+  setTimeout(()=> flash.style.opacity = '0', 220);
+  // if music not playing, enable user to play too
+  if(!bgm.paused){
+    musicBtn.disabled = true;
+    musicBtn.textContent = '🎵 Playing';
+  } else {
+    // don't force-play audio, but keep UI consistent
+    musicBtn.textContent = '💗 Play Music & Reveal';
   }
-}
-
-document.addEventListener("pointermove",e=>{
-  if(Math.random()>0.2)return;
-  const s=document.createElement("div");
-  s.className="spark";
-  s.style.left=e.pageX+"px";
-  s.style.top=e.pageY+"px";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),1200);
 });
 
-/* ============================================================
-   PAGE 2 — BALLOONS + RUNNING BUTTON
-============================================================ */
+/* -------------------------
+   Accessibility & safety
+   ------------------------- */
+messageEl.addEventListener('keydown', (e)=>{
+  // allow keyboard scrolling in message area
+  // nothing special required here
+});
 
-function spawnBalloons(){
-  const area = document.getElementById("balloonArea");
-  for(let b=0;b<6;b++){
-    const balloon=document.createElement("div");
-    balloon.className="balloon";
-    balloon.style.left = (20 + Math.random()*80) + "%";
-    balloon.style.top = (20 + Math.random()*60) + "px";
-
-    balloon.addEventListener("click", e=>{
-      balloon.style.animation = "popBalloon .3s forwards";
-      spawnConfetti(e.pageX,e.pageY,25);
-      setTimeout(()=>balloon.remove(),300);
-    });
-
-    area.appendChild(balloon);
+/* -------------------------
+   Initial small ambient fireflies (very soft) after idle
+   ------------------------- */
+setTimeout(()=> {
+  // gentle ambient tiny fireflies behind card to hint it's magical
+  // don't start main FX loop until user triggers
+  for(let i=0;i<6;i++){
+    fireflies.push(new Firefly(mainCard.getBoundingClientRect()));
   }
-}
+  startFXLoop();
+}, 700);
 
-/* RUNAWAY BUTTON */
-const runBtn = document.getElementById("runBtn");
-runBtn.addEventListener("mouseover", ()=>{
-  const x = Math.random()*220 - 110;
-  const y = Math.random()*140 - 70;
-  runBtn.style.transform = `translate(${x}px, ${y}px)`;
-});
-runBtn.addEventListener("click", e=>{
-  spawnConfetti(e.pageX,e.pageY,35);
+/* -------------------------
+   Cleanup on page hide/unload
+   ------------------------- */
+addEventListener('visibilitychange', ()=>{
+  if(document.hidden){
+    // pause audio to be polite
+    if(!bgm.paused) bgm.pause();
+  }
 });
 </script>
-
 </body>
 </html>
