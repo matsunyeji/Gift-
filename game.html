@@ -113,36 +113,25 @@
 
 </head>
 <body class="game-page">
+  <div id="sky"></div>
+  <div id="road"></div>
 
-<div id="sky"></div>
-<div id="road"></div>
-<img id="car" src="car.png" alt="Car">
+  <div id="gameRoot">
+      <canvas id="gameCanvas"></canvas>
 
-<div id="gameRoot">
-  <canvas id="gameCanvas" width="420" height="720"></canvas>
-
-  <div id="hud">
-    <div id="hearts"></div>
-    <div id="score">Score: 0</div>
+      <div id="overlay">
+          <h2 id="overlayTitle"></h2>
+          <p id="overlayText"></p>
+          <button id="restart">Restart</button>
+      </div>
   </div>
 
   <div id="touchControls">
-    <button id="leftBtn" class="ctl">◀</button>
-    <button id="rightBtn" class="ctl">▶</button>
+      <button id="leftBtn">◀</button>
+      <button id="rightBtn">▶</button>
   </div>
 
-  <div id="overlay">
-    <h2 id="overlayTitle">Tap to Start</h2>
-    <div id="overlayText">Tap anywhere to begin (this enables music)</div>
-    <div id="overlayBtns">
-      <button id="restart" class="primary-btn">Restart</button>
-      <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
-    </div>
-  </div>
-</div>
-
-<!-- script last so DOM is ready -->
-<script src="script.js"></script>
-
+  <audio id="bgm" src="music.mp3"></audio>
 </body>
+
 </html>
