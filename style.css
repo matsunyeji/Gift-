@@ -13,7 +13,7 @@ html, body {
 }
 
 /* ---------- CARD BACKGROUND ---------- */
-body.card-page {
+body {
   background: url('card-bg.jpg') center/cover no-repeat fixed;
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@ body.card-page {
 }
 
 /* ---------- CARD CONTAINER ---------- */
-.card-wrap {
+.card {
   max-width: 680px;
   width: 100%;
   background: rgba(255, 255, 255, 0.65);
@@ -34,7 +34,7 @@ body.card-page {
 }
 
 /* ---------- TITLE ---------- */
-.title {
+.card h1 {
   font-size: 2.1rem;
   font-weight: 800;
   color: #8a2a42;
@@ -42,47 +42,22 @@ body.card-page {
   text-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* ---------- MESSAGE TEXT ---------- */
-.message-wrap {
-  margin-top: 10px;
-  margin-bottom: 26px;
-}
-
-.message {
+/* ---------- TYPEWRITER MESSAGE ---------- */
+.typing {
   font-size: 1.02rem;
   line-height: 1.55;
   font-weight: 500;
   color: #5d2b33;
   text-align: left;
   white-space: pre-wrap;
-}
-
-.message.typed-done {
-  opacity: 1;
-}
-
-/* ---------- BUTTON ---------- */
-.primary-btn {
-  padding: 12px 22px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(90deg, #ff4fa3, #ff7ad1);
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-  box-shadow: 0 6px 18px rgba(255,80,160,0.22);
-}
-
-.primary-btn:active {
-  transform: scale(0.97);
+  min-height: 200px;
+  margin-bottom: 26px;
 }
 
 /* ---------- FOOTER NOTE ---------- */
 .note {
-  margin-top: 26px;
-  font-size: 0.95rem;
+  margin-top: 10px;
+  font-size: 1rem;
   color: #7a424d;
   opacity: 0.9;
 }
