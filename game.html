@@ -4,42 +4,145 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Birthday Race — Game</title>
-<link rel="stylesheet" href="style.css?v=1.1">
 
-</head><body class="game-page">
+<link rel="stylesheet" href="style.css">
 
-  <!-- temporary button to unlock audio -->
-  <button id="startBtn">Start Game</button>
-  <audio id="bgm" src="music.mp3" loop></audio>
+<style>
+  /* Make sure sky & road backgrounds show */
+  body.game-page {
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+  }
 
-  <div id="sky"></div>
-  <div id="road"></div>
-  <img id="car" src="car.png" alt="Car">
+  #sky {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: url('sky.png') repeat-y center/cover;
+    z-index: -3;
+    animation: skyScroll 18s linear infinite;
+  }
+  @keyframes skyScroll { 
+    from { background-position-y: 0; }
+    to   { background-position-y: 2048px; }
+  }
 
-  <div id="gameRoot">
-      <canvas id="gameCanvas" width="420" height="720" aria-label="Birthday racing game"></canvas>
+  #road {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: url('road.png') repeat-y center/cover;
+    z-index: -2;
+    opacity: 0.9;
+    animation: roadScroll 3s linear infinite;
+  }
+  @keyframes roadScroll { 
+    from { background-position-y: 0; }
+    to   { background-position-y: 1024px; }
+  }
 
-      <div id="hud" aria-hidden="true">
-        <div id="hearts" aria-live="polite"></div>
-        <div id="score">Score: 0</div>
-      </div>
+  #car {
+    display: none; /* car drawn on canvas instead */
+  }
 
-      <div id="touchControls" aria-hidden="true">
-        <button id="leftBtn" class="ctl">◀</button>
-        <button id="rightBtn" class="ctl">▶</button>
-      </div>
+  #gameRoot {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
 
-      <div id="overlay" role="dialog" aria-hidden="true">
-        <h2 id="overlayTitle">Tap to Start</h2>
-        <div id="overlayText">Tap anywhere to begin (this enables music)</div>
-        <div id="overlayBtns">
-          <button id="restart" class="primary-btn">Restart</button>
-          <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
-        </div>
-      </div>
+  #gameCanvas {
+    background: transparent;
+    display: block;
+  }
+
+  #overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    z-index: 5;
+  }
+
+  #overlayBtns {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .primary-btn, .secondary-btn {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: none;
+    font-size: 18px;
+  }
+
+  .primary-btn {
+    background: #ff4971;
+    color: white;
+  }
+
+  .secondary-btn {
+    background: #ddd;
+  }
+
+  #touchControls {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 15px;
+  }
+
+  .ctl {
+    font-size: 32px;
+    padding: 12px 20px;
+    border-radius: 10px;
+  }
+</style>
+
+</head>
+<body class="game-page">
+
+<div id="sky"></div>
+<div id="road"></div>
+<img id="car" src="car.png" alt="Car">
+
+<div id="gameRoot">
+  <canvas id="gameCanvas" width="420" height="720"></canvas>
+
+  <div id="hud">
+    <div id="hearts"></div>
+    <div id="score">Score: 0</div>
   </div>
 
-  <script src="script.js"></script>
+  <div id="touchControls">
+    <button id="leftBtn" class="ctl">◀</button>
+    <button id="rightBtn" class="ctl">▶</button>
+  </div>
+
+  <div id="overlay">
+    <h2 id="overlayTitle">Tap to Start</h2>
+    <div id="overlayText">Tap anywhere to begin (this enables music)</div>
+    <div id="overlayBtns">
+      <button id="restart" class="primary-btn">Restart</button>
+      <button id="back" class="secondary-btn" onclick="location.href='index.html'">Back to Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- script last so DOM is ready -->
+<script src="script.js"></script>
+
 </body>
-  
 </html>
