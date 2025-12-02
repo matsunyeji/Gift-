@@ -6,28 +6,24 @@
 <title>Happy Birthday Garv — Card</title>
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="card-page">
-  <main class="card-wrap">
-  
-      <h1 class="title">🎉 Happy Birthday Garv! 🎉</h1>
+<body>
 
-      <div class="message-wrap">
-        <div id="typewriter" class="message" aria-live="polite"></div>
-      </div>
+  <main class="card">
 
-      <div class="footer-row">
-        <button id="startBtn" class="primary-btn">Start Game 🚗🎂</button>
-      </div>
+      <h1>🎉 Happy Birthday Garv! 🎉</h1>
+
+      <div id="message" class="typing"></div>
+
 
       <div class="note">— with lots of kasht taken by your homie</div>
-    </div>
+
   </main>
 
-  <!-- Preload audio so the click counts as a gesture -->
+  <!-- Preload audio -->
   <audio id="preloadAudio" src="music.mp3" preload="auto"></audio>
 
 <script>
-/* ---------- TYPEWRITER TEXT (medium speed) ---------- */
+/* ---------- TYPEWRITER TEXT ---------- */
 const TEXT = `Bhaiii tysm for guiding me and explaining things to me for hours like literally saving me every single time. And fr tg that you initiated that convo in the Live Insaan server varna hum aaj dost hi nahi hote ;-; (but aap catfish hote hote bach gaye 💀).
 
 Anyways ab toh we homies bro daily tea spilling aur aapko gossip karne mein majboor kar diya hai humne lol 😂.
@@ -44,8 +40,8 @@ And all the bestest for tmrw's physics paper AAG LAGA DENAAA 🔥
 
 Once Again Happiest birthday Garvitaa 🎀`;
 
-const target = document.getElementById('typewriter');
-const speed = 28; // ms per char (medium)
+const target = document.getElementById('message');
+const speed = 28;
 let i = 0;
 
 function typeNext(){
@@ -61,8 +57,6 @@ function typeNext(){
     if(last === '.' || last === '!' || last === '?') extra = 160;
     else if(last === ',' || last === ';') extra = 50;
     setTimeout(typeNext, speed + extra);
-  } else {
-    target.classList.add('typed-done');
   }
 }
 
@@ -70,19 +64,16 @@ document.addEventListener('DOMContentLoaded', ()=> {
   setTimeout(typeNext, 400);
 });
 
-/* ---------- Start Game button: create gesture and navigate ---------- */
+/* ---------- Start Game Button ---------- */
 const startBtn = document.getElementById('startBtn');
 const audio = document.getElementById('preloadAudio');
 
 startBtn.addEventListener('click', async () => {
-  // play to register a user gesture (some browsers require this)
-  try { await audio.play(); } catch(e){ /* ignore */ }
-  // mark gesture so game page can auto-play music
+  try { await audio.play(); } catch(e){}
   sessionStorage.setItem('birthday_gesture','1');
-  // small delay then navigate
   setTimeout(()=> location.href = 'game.html', 120);
 });
 </script>
+
 </body>
 </html>
-
