@@ -60,88 +60,43 @@ body.card-page{
     font-size:1.1rem;
 }
 
-/* ---------------- GAME PAGE ---------------- */
-body.game-page{
-    background:#87ceeb; /* fallback sky color */
-    overflow:hidden;
+/* ---------------- GAME PAGE BACKGROUNDS ---------------- */
+
+body.game-page {
+    overflow: hidden;
+    background: #000; /* fallback */
 }
 
-/* Sky */
-#sky{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#87ceeb;
-    z-index:-3;
+/* SKY */
+#sky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('sky.png') center/cover no-repeat;
+    z-index: -3;
 }
 
-/* Road */
-#road{
-    position:fixed;
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:260px;
-    height:100%;
-    background:url('road.png') repeat-y center/cover;
-    animation:scrollRoad 3s linear infinite;
-    z-index:-2;
+/* ROAD */
+#road {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background: url('road.png') center/cover repeat-y;
+    animation: scrollRoad 2.5s linear infinite;
+    z-index: -2;
 }
 
-@keyframes scrollRoad{
-    from { background-position-y:0; }
-    to { background-position-y:100%; }
+/* ROAD SCROLL */
+@keyframes scrollRoad {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-50%); }
 }
 
-/* Car */
-#car{
-    position:fixed;
-    bottom:70px;
-    left:50%;
-    transform:translateX(-50%);
-    width:120px;
-    z-index:5;
-}
-
-/* Canvas container */
-#gameRoot{
-    position:relative;
-    width:420px;
-    margin:0 auto;
-}
-
-/* Touch buttons */
-.ctl{
-    width:80px;
-    height:80px;
-    font-size:2rem;
-    border-radius:50%;
-    border:none;
-}
-
-/* HUD */
-#hud{
-    position:absolute;
-    top:10px;
-    left:10px;
-    color:white;
-    font-size:1.2rem;
-}
-
-/* Overlay */
-#overlay{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-    color:white;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
+/* CAR IMAGE (if used) */
+#car {
+    display: none; /* canvas draws car, so we hide this */
 }
