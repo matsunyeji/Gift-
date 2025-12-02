@@ -16,10 +16,15 @@
   const carImg = new Image(); carImg.src = 'car.png';
   const coneImg = new Image(); coneImg.src = 'cone.png';
 
-  document.getElementById("startBtn").addEventListener("click", () => {
+  // audio (loop)
+const bgm = document.getElementById("bgm");
+bgm.volume = 0.6;
+
+// start button
+document.getElementById("startBtn").addEventListener("click", () => {
   bgm.muted = false;
   bgm.play().catch(() => {});
-  document.getElementById("startBtn").style.display = "none"; // hide button
+  document.getElementById("startBtn").style.display = "none";
 });
 
   // audio (loop)
