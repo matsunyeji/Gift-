@@ -1,4 +1,4 @@
-/* script.js — Game logic */
+/* script.js — Game logic (cleaned) */
 (() => {
   const CANVAS_W = 420, CANVAS_H = 720;
   const canvas = document.getElementById('gameCanvas');
@@ -12,27 +12,21 @@
   const heartsBox = document.getElementById('hearts');
   const scoreEl = document.getElementById('score');
 
- 
+  // assets
   const carImg = new Image(); carImg.src = 'car.png';
-  const coneImg = new Image(); 
-  coneImg.src = 'cone.png';
+  const coneImg = new Image(); coneImg.src = 'cone.png';
 
-  // audio
-const bgm = new Audio('music.mp3');
-bgm.loop = true;
+  // audio (loop)
+  const bgm = new Audio('music.mp3');
+  bgm.loop = true;
+  bgm.volume = 0.6;
 
-// clean audio start system
-function tryStartMusic() {
-  bgm.play().catch(()=>{});
-}
+  // helper to try play (will fail silently if blocked)
+  function tryStartMusic() {
+    bgm.play().catch(()=>{ /* autoplay blocked, will start on user gesture */ });
+  }
 
-// ALWAYS start music on *first tap* — required by Safari
-document.addEventListener('pointerdown', () => {
-  sessionStorage.setItem('birthday_gesture', 'yes');
-  tryStartMusic();
-}, { once: true });
-
-  // state
+  // game state
   let w = CANVAS_W, h = CANVAS_H, scale = 1;
   let car = { x: (w-80)/2, y: h - 150, w: 80, h: 120 };
   let keys = { left:false, right:false };
@@ -50,10 +44,10 @@ document.addEventListener('pointerdown', () => {
     canvas.style.width = (CANVAS_W * scale) + 'px';
     canvas.style.height = (CANVAS_H * scale) + 'px';
     canvas.width = CANVAS_W; canvas.height = CANVAS_H;
-    // reset car
-    car.w = Math.round(w * 0.14);
+    // reset car dimensions and position relative to canvas
+    car.w = Math.round(CANVAS_W * 0.14);
     car.h = Math.round(car.w * 1.35);
-    car.x = (w - car.w) / 2;
+    car.x = Math.round((w - car.w) / 2);
     car.y = h - car.h - 20;
   }
   window.addEventListener('resize', resize);
@@ -68,31 +62,20 @@ document.addEventListener('pointerdown', () => {
     }
   }
 
-  function tryStartMusic(){
-  bgm.play().catch(()=>{});
-}
-
-// ALWAYS start music on the first tap
-document.addEventListener('pointerdown', () => {
-  sessionStorage.setItem('birthday_gesture', 'yes');
-  tryStartMusic();
-}, { once: true });
-
-
-
- function spawnObstacle(){
-  const width = Math.round(w * 0.14);
-  const x = Math.random() * (w - width - 20) + 10;
-  const speed = 2 + Math.random()*2 + score*0.01;
-  obstacles.push({ 
-    x, 
-    y: -80, 
-    w: width, 
-    h: Math.round(width * 1.1), 
-    speed,
-    img: coneImg
-  });
-}
+  // spawn a cone obstacle
+  function spawnObstacle(){
+    const width = Math.round(w * 0.14);
+    const x = Math.random() * (w - width - 20) + 10;
+    const speed = 2 + Math.random()*2 + score*0.01;
+    obstacles.push({ 
+      x, 
+      y: -Math.round(width * 1.1), 
+      w: width, 
+      h: Math.round(width * 1.1), 
+      speed,
+      img: coneImg
+    });
+  }
 
   function checkCollision(a,b){
     return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
@@ -100,18 +83,20 @@ document.addEventListener('pointerdown', () => {
 
   function update(dt){
     if(!running) return;
+
     // movement
     const moveSpeed = Math.max(4, w*0.006) * (1 + Math.min(1, score/100));
     if(keys.left) car.x -= moveSpeed;
     if(keys.right) car.x += moveSpeed;
     car.x = Math.max(8, Math.min(car.x, w - car.w - 8));
 
-    // obstacles
+    // spawn timing
     if(performance.now() - lastSpawn > Math.max(400, 1000 - score*4)){
       if(Math.random() < 0.78) spawnObstacle();
       lastSpawn = performance.now();
     }
 
+    // obstacle updates & collisions
     for(let i=obstacles.length-1;i>=0;i--){
       const o = obstacles[i];
       o.y += o.speed * (1 + score*0.005) * dt * 0.03;
@@ -121,7 +106,7 @@ document.addEventListener('pointerdown', () => {
         obstacles.splice(i,1);
         lives = Math.max(0, lives-1);
         renderHearts();
-        // shake
+        // shake animation
         canvas.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:220});
         if(lives === 0){ gameOver(); return; }
       } else if(o.y > h + 40){
@@ -132,33 +117,47 @@ document.addEventListener('pointerdown', () => {
     }
   }
 
+  // drawing helpers
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function roundRectFill(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    roundRectPath(ctx, x, y, w, h, r);
+    ctx.fill();
+  }
+
   function draw(){
     // clear
     ctx.clearRect(0,0,w,h);
 
-    // draw background image tiled vertically for a scrolling feel
-    // Background now handled by CSS (#sky and #road)
-
-
     // overlay tint to make sprites pop
-    ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(0,0,w,h);
-//obstacles
-    obstacles.forEach(o => {
-  if (o.img && o.img.complete) {
-    ctx.drawImage(o.img, o.x, o.y, o.w, o.h);
-  } else {
-    ctx.fillStyle = '#ffb347'; // fallback cone color
-    ctx.fillRect(o.x, o.y, o.w, o.h);
-  }
-});
+    ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fillRect(0,0,w,h);
 
+    // obstacles (draw cone image if loaded)
+    obstacles.forEach(o => {
+      if (o.img && o.img.complete) {
+        ctx.drawImage(o.img, o.x, o.y, o.w, o.h);
+      } else {
+        // fallback simple cone-ish rectangle
+        ctx.save();
+        ctx.fillStyle = '#ffb347';
+        roundRectFill(ctx, o.x, o.y, o.w, o.h, 8);
+        ctx.restore();
+      }
+    });
 
     // draw car
     if(carImg.complete){
       ctx.drawImage(carImg, 0,0,carImg.width,carImg.height, Math.round(car.x), Math.round(car.y), Math.round(car.w), Math.round(car.h));
     } else {
       ctx.fillStyle = '#ff3a6e';
-      ctx.fillRect(Math.round(car.x), Math.round(car.y), Math.round(car.w), Math.round(car.h));
+      roundRectFill(ctx, Math.round(car.x), Math.round(car.y), Math.round(car.w), Math.round(car.h * 0.6), 10);
     }
   }
 
@@ -168,7 +167,7 @@ document.addEventListener('pointerdown', () => {
     update(dt);
     draw();
     last = now;
-    requestAnimationFrame(loop);
+    if (running) requestAnimationFrame(loop);
   }
 
   function startGame(){
@@ -179,6 +178,7 @@ document.addEventListener('pointerdown', () => {
     scoreEl.textContent = 'Score: 0';
     last = performance.now();
     requestAnimationFrame(loop);
+    // only attempt play here; if browser blocks, the pointerdown listener will handle it
     tryStartMusic();
   }
 
@@ -222,15 +222,20 @@ document.addEventListener('pointerdown', () => {
 
   // start / overlay logic
   renderHearts();
-  tryStartMusic();
 
+  // If the user already gave a gesture earlier, auto-start the game and music
   if(sessionStorage.getItem('birthday_gesture')){
-    setTimeout(()=> startGame(), 90);
+    tryStartMusic();
+    setTimeout(()=> startGame(), 120);
   } else {
+    // show overlay and wait for first tap anywhere (this enables audio)
     overlay.style.display = 'flex';
     overlayTitle.textContent = 'Tap to Start';
     overlayText.textContent = 'Tap anywhere to begin (this enables music)';
-    function firstStart(){
+
+    function firstStart() {
+      sessionStorage.setItem('birthday_gesture','yes');
+      tryStartMusic();
       startGame();
       document.removeEventListener('pointerdown', firstStart);
     }
