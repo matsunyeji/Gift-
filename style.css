@@ -1,8 +1,4 @@
-/* -------------------------------------------------
-   FINAL BIRTHDAY CARD — CLEAN STYLE.CSS
-   No game code. Safe. Works on all devices.
---------------------------------------------------- */
-
+/* ---------- RESET ---------- */
 * {
   margin: 0;
   padding: 0;
@@ -10,78 +6,83 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto;
-  background: url('bg.png') center/cover no-repeat fixed;
-  color: #fff;
-  min-height: 100vh;
+html, body {
+  height: 100%;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #000;
+}
+
+/* ---------- CARD BACKGROUND ---------- */
+body.card-page {
+  background: url('card-bg.jpg') center/cover no-repeat fixed;
   display: flex;
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  justify-content: center;
   padding: 20px;
 }
 
-/* Card container */
-.card {
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(9px);
-  border-radius: 18px;
-  padding: 28px 24px;
-  max-width: 420px;
+/* ---------- CARD CONTAINER ---------- */
+.card-wrap {
+  max-width: 680px;
   width: 100%;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(4px);
+  border-radius: 18px;
+  padding: 32px 26px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
-/* Title */
-h1 {
-  font-size: 1.9rem;
+/* ---------- TITLE ---------- */
+.title {
+  font-size: 2.1rem;
   font-weight: 800;
-  margin-bottom: 16px;
-  line-height: 1.3;
+  color: #8a2a42;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-/* Message text */
-#message {
-  font-size: 1.15rem;
-  line-height: 1.6;
-  min-height: 120px;
-  opacity: 0.95;
+/* ---------- MESSAGE TEXT ---------- */
+.message-wrap {
+  margin-top: 10px;
+  margin-bottom: 26px;
+}
+
+.message {
+  font-size: 1.02rem;
+  line-height: 1.55;
+  font-weight: 500;
+  color: #5d2b33;
+  text-align: left;
   white-space: pre-wrap;
 }
 
-/* Typewriter cursor */
-.typing::after {
-  content: "|";
-  margin-left: 4px;
-  animation: blink 0.8s steps(1) infinite;
+.message.typed-done {
+  opacity: 1;
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/* Button */
-button {
-  margin-top: 26px;
-  padding: 12px 20px;
-  font-size: 1.1rem;
-  border: none;
+/* ---------- BUTTON ---------- */
+.primary-btn {
+  padding: 12px 22px;
   border-radius: 12px;
-  cursor: pointer;
+  border: none;
   background: linear-gradient(90deg, #ff4fa3, #ff7ad1);
-  color: #fff;
+  color: white;
+  font-size: 1.1rem;
   font-weight: 600;
-  box-shadow: 0 10px 30px rgba(255,80,160,0.25);
-  transition: transform 0.18s;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 6px 18px rgba(255,80,160,0.22);
 }
 
-button:active {
-  transform: scale(0.96);
+.primary-btn:active {
+  transform: scale(0.97);
 }
 
-/* Mobile responsive */
-@media (max-width: 480px) {
-  h1 { font-size: 1.7rem; }
-  #message { font-size: 1.05rem; }
+/* ---------- FOOTER NOTE ---------- */
+.note {
+  margin-top: 26px;
+  font-size: 0.95rem;
+  color: #7a424d;
+  opacity: 0.9;
 }
