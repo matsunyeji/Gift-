@@ -4,418 +4,358 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Happy Birthday — Garv</title>
+
 <style>
-  /* ---------- Cute Fun Aesthetic (single-file safe) ---------- */
-  :root{--muted:#5a3c42; --accent:#8bd3d6}
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;-webkit-font-smoothing:antialiased}
-  body{
-    background: linear-gradient(120deg, #e9d6ff 0%, #d5f1ff 45%, #e9f9f5 100%);
-    display:flex;align-items:center;justify-content:center;padding:28px;
-  }
-  .wrap{width:94%;max-width:920px;position:relative;}
-  .card{
-    width:100%;background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.9));
-    border-radius:18px;padding:30px 28px;box-shadow:0 18px 50px rgba(92,72,84,0.12);position:relative;overflow:visible;
-    transition:transform .45s ease,opacity .35s ease;
-  }
-  .title{font-size:clamp(1.4rem,3.8vw,2rem);text-align:center;color:#7b3b60;margin-bottom:12px;font-weight:800}
-  .typing{font-size:clamp(1rem,2.4vw,1.05rem);color:var(--muted);line-height:1.6;min-height:160px;padding:6px 8px;border-radius:10px;margin-bottom:14px;text-align:left}
-  .controls{display:flex;justify-content:center;gap:12px;margin-top:6px}
-  .btn{background:linear-gradient(135deg,#ffd6f0,#a6fff2);border:none;padding:12px 20px;border-radius:14px;font-size:1.02rem;font-weight:700;cursor:pointer;color:#222;box-shadow:0 8px 30px rgba(123,76,110,0.12);transition:transform .18s,box-shadow .18s}
-  .btn:active{transform:translateY(1px) scale(.99)}
-  .btn.played{opacity:.9;transform:scale(.98)}
-  .note{margin-top:18px;text-align:center;color:#6b3d4a;font-style:italic}
+/* ======================================================
+   GLOBAL + PAGE 1 + PAGE 2 — FULL PROJECT CSS
+   ====================================================== */
 
-  /* second page */
-  .second-page{display:none; padding:30px; border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95)); box-shadow:0 18px 50px rgba(92,72,84,0.08); min-height:420px; position:relative; overflow:hidden;}
-  .second-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .small{font-size:0.92rem;color:var(--muted)}
-  .interaction-area{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
-  .panel{flex:1 1 260px;background:linear-gradient(180deg, rgba(250,250,255,1), rgba(255,255,255,0.94));border-radius:12px;padding:12px;box-shadow:0 10px 30px rgba(86,65,80,0.06);text-align:center;min-height:160px;position:relative}
-  .runaway{padding:10px 14px;border-radius:10px;border:2px dashed #ffd6f0;background:transparent;font-weight:800;cursor:pointer;display:inline-block}
-  .balloon{width:96px;height:130px;margin:8px auto;cursor:pointer;position:relative;transition:transform .12s ease}
-  .balloon .string{width:2px;height:46px;background:#B88AA6;margin:6px auto 0;border-radius:2px}
-  .confetti{position:absolute;pointer-events:none;border-radius:3px;transform-origin:center;animation:confetti-fall 2s linear forwards;opacity:0.98}
-  @keyframes confetti-fall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1}70%{opacity:1}100%{transform:translateY(220px) rotate(420deg) scale(.85);opacity:0}}
-  .cat-wrap{position:absolute;right:12px;bottom:12px;width:180px;height:180px;pointer-events:none;opacity:0;transform:translateY(20px) scale(.95);transition:opacity .5s ease, transform .5s cubic-bezier(.2,.9,.3,1)}
-  .cat-wrap.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-  .cat-svg{width:100%;height:100%}
-  .confetti-toggle{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px}
-  .small-btn{padding:8px 10px;border-radius:8px;border:none;background:#ffe9f4;font-weight:700;cursor:pointer}
-  .tap-area{padding:18px;border-radius:10px;border:2px dashed #CDEBF1;min-height:120px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+:root{
+  --card-w: 94%;
+  --card-max: 780px;
+  --muted: #5a3c42;
+}
 
-  /* floating balloon animation */
-  @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
-  .floating{animation:floaty 3s ease-in-out infinite}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  -webkit-font-smoothing: antialiased;
+}
+body{
+  background: linear-gradient(120deg, #e9d6ff 0%, #d5f1ff 45%, #e9f9f5 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+}
 
-  /* debug box */
-  #debug{position:fixed;right:14px;bottom:14px;background:rgba(0,0,0,0.6);color:#fff;padding:10px 12px;border-radius:10px;font-size:12px;z-index:999;max-width:320px}
-  #debug b{display:block;font-size:13px;margin-bottom:6px}
+/* PAGE WRAPPERS */
+#page1, #page2{
+  width:var(--card-w);
+  max-width:var(--card-max);
+}
+#page2{ display:none; }
 
-  /* responsive tweaks */
-  @media(max-width:680px){ .interaction-area{flex-direction:column} .cat-wrap{right:8px;bottom:8px;width:140px;height:140px} }
+/* CARD */
+.card{
+  width:100%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.94),rgba(255,255,255,0.90));
+  border-radius:18px;
+  padding:30px 28px;
+  box-shadow:0 18px 50px rgba(92,72,84,0.12);
+  position:relative;
+  overflow:visible;
+}
+
+/* TITLE */
+.title{
+  font-size:clamp(1.4rem,3.8vw,2rem);
+  text-align:center;
+  color:#7b3b60;
+  margin-bottom:14px;
+  font-weight:800;
+}
+
+/* TYPEWRITER TEXT */
+.typing{
+  font-size:clamp(1rem,2.4vw,1.06rem);
+  color:var(--muted);
+  line-height:1.6;
+  min-height:160px;
+  padding:6px 8px;
+  border-radius:10px;
+  margin-bottom:18px;
+}
+
+/* BUTTONS */
+.controls{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+}
+.btn{
+  background:linear-gradient(135deg,#ffd6f0,#a6fff2);
+  border:none;
+  padding:12px 20px;
+  border-radius:14px;
+  font-size:1.02rem;
+  font-weight:700;
+  cursor:pointer;
+  color:#2b2b2b;
+  box-shadow:0 8px 30px rgba(123,76,110,0.12);
+  transition:transform .18s ease;
+}
+.btn:active{ transform:translateY(1px) scale(.99) }
+.btn.played{ opacity:.9; transform:scale(.98) }
+
+/* FOOTER NOTE */
+.note{
+  margin-top:18px;
+  text-align:center;
+  color:#6b3d4a;
+  font-style:italic;
+}
+
+/* CONFETTI */
+.confetti{
+  position:absolute;
+  pointer-events:none;
+  border-radius:3px;
+  opacity:.98;
+  animation:confetti-fall 2s linear forwards;
+}
+@keyframes confetti-fall{
+  0%{transform:translateY(0) rotate(0);opacity:1}
+  100%{transform:translateY(220px) rotate(420deg);opacity:0}
+}
+
+/* SPARKLES */
+.spark{
+  position:absolute;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.2)60%);
+  filter:blur(.6px);
+  opacity:.95;
+  transform:translate(-50%,-50%);
+  animation:spark-rise 1.2s ease-out forwards;
+}
+@keyframes spark-rise{
+  from{transform:translate(-50%,-50%) scale(1);opacity:1}
+  to{transform:translate(-50%,-120%) scale(.4);opacity:0}
+}
+
+/* ============================================
+   PAGE 2 — FUN INTERACTIVE PAGE
+   ============================================ */
+
+#page2{
+  animation:fadeInPage .7s ease forwards;
+}
+@keyframes fadeInPage{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.page2-title{
+  font-size:clamp(1.4rem,3.8vw,2rem);
+  color:#7b3b60;
+  font-weight:800;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.page2-note{
+  text-align:center;
+  color:#6b3d4a;
+  margin-bottom:18px;
+  font-size:1rem;
+}
+
+/* BALLOONS */
+.balloon{
+  position:absolute;
+  width:60px;
+  height:80px;
+  background:radial-gradient(circle at 50% 35%,#ffb6c9,#ff87ab);
+  border-radius:50% 50% 48% 48%;
+  animation:floatUp 6s ease-in-out infinite;
+  cursor:pointer;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) translateX(0)}
+  50%{transform:translateY(-40px) translateX(10px)}
+  100%{transform:translateY(0) translateX(0)}
+}
+.balloon::after{
+  content:"";
+  position:absolute;
+  width:2px;
+  height:40px;
+  background:rgba(0,0,0,0.15);
+  left:50%;
+  bottom:-40px;
+  transform:translateX(-50%);
+}
+
+/* POP */
+@keyframes popBalloon{
+  0%{transform:scale(1);opacity:1}
+  100%{transform:scale(0);opacity:0}
+}
+
+/* RUNAWAY BUTTON */
+.catch-btn{
+  margin-top:40px;
+  background:linear-gradient(135deg,#ffd6f0,#a6fff2);
+  padding:12px 20px;
+  border-radius:14px;
+  border:none;
+  font-weight:700;
+  font-size:1.02rem;
+  cursor:pointer;
+  color:#2b2b2b;
+  box-shadow:0 8px 30px rgba(123,76,110,0.12);
+  position:relative;
+  transition:transform .18s ease, left .2s ease, top .2s ease;
+}
+.catch-btn:hover{
+  transform:scale(1.06);
+}
+
+@media(max-width:480px){
+  .card{padding:20px}
+  .typing{min-height:140px}
+  .btn{width:100%}
+}
 </style>
 </head>
+
 <body>
-  <div class="wrap">
 
-    <!-- MAIN CARD -->
-    <main id="mainCard" class="card" role="main" aria-labelledby="title">
-      <h1 id="title" class="title">🎉 Happy Birthday Garv! 🎉</h1>
+<!-- ========================================================
+     PAGE 1
+======================================================== -->
+<div id="page1">
+  <main class="card">
+    <h1 class="title">🎉 Happy Birthday Garv! 🎉</h1>
 
-      <div id="message" class="typing" aria-live="polite"></div>
+    <div id="message" class="typing"></div>
 
-      <div class="controls">
-        <button id="musicBtn" class="btn" aria-label="Play music and open">💗 Play Music & Open</button>
-        <button id="openSecond" class="btn" aria-label="Open second page" style="background:#fff3d9">✨ Surprise (interactive)</button>
-      </div>
+    <div class="controls">
+      <button id="musicBtn" class="btn">💗 Play Music & Open</button>
+    </div>
 
-      <div class="note">— with lots of kasht taken by your homie</div>
-    </main>
+    <div class="note">— with lots of kasht taken by your homie</div>
+  </main>
+</div>
 
-    <!-- SECOND PAGE (hidden until opened) -->
-    <section id="secondPage" class="second-page" aria-hidden="true">
-      <div class="second-header">
-        <div>
-          <div style="font-weight:800;font-size:1.15rem;color:#6a2b56">Bonus: Interactive Fun Zone</div>
-          <div class="small">Tap things. Make confetti. Pop the balloon. Summon the cat.</div>
-        </div>
-        <div>
-          <button id="backBtn" class="small-btn">← Back</button>
-        </div>
-      </div>
+<!-- ========================================================
+     PAGE 2 — INTERACTIVE FUN
+======================================================== -->
+<div id="page2">
+  <main class="card">
 
-      <div class="interaction-area">
-        <div class="panel">
-          <div style="font-weight:800;margin-bottom:8px">Runaway Button</div>
-          <div class="small">Try to click it — it won't make it easy.</div>
-          <div style="margin-top:12px">
-            <button id="runBtn" class="runaway">Catch me if you can 🤭</button>
-          </div>
-        </div>
+    <h2 class="page2-title">🎈 Bonus Fun Page 🎈</h2>
+    <p class="page2-note">Pop the balloons & try to click the running button 😭💗</p>
 
-        <div class="panel">
-          <div style="font-weight:800;margin-bottom:8px">Tap for Confetti</div>
-          <div class="small">Click the area for a celebratory burst.</div>
-          <div id="tapArea" class="tap-area" style="margin-top:12px">🎊 Tap here!</div>
-          <div class="confetti-toggle">
-            <label class="small">Auto confetti</label>
-            <button id="toggleAuto" class="small-btn">Off</button>
-          </div>
-        </div>
+    <!-- Balloons container -->
+    <div id="balloonArea" style="position:relative; height:320px; margin-top:10px;"></div>
 
-        <div class="panel">
-          <div style="font-weight:800;margin-bottom:8px">Balloon Pop</div>
-          <div class="small">Pop it to reveal a surprise.</div>
-          <div style="margin-top:12px">
-            <div id="balloon" class="balloon floating" title="Pop me">
-              <!-- simple balloon (SVG) -->
-              <svg viewBox="0 0 80 110" width="96" height="130" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <radialGradient id="g1" cx="35%" cy="30%" r="70%">
-                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
-                    <stop offset="100%" stop-color="#ff8fb1" />
-                  </radialGradient>
-                </defs>
-                <ellipse cx="40" cy="40" rx="32" ry="40" fill="url(#g1)" stroke="#ff5fa0" stroke-width="2"/>
-                <polygon points="36,70 44,70 40,90" fill="#ffb6d6" />
-                <line x1="40" y1="90" x2="40" y2="115" stroke="#B88AA6" stroke-width="2"/>
-              </svg>
-              <div class="string"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Runaway button -->
+    <div style="text-align:center;">
+      <button id="runBtn" class="catch-btn">Catch Me 😭</button>
+    </div>
 
-      <!-- cute cat -->
-      <div id="cat" class="cat-wrap" aria-hidden="true">
-        <!-- very small inline SVG cat -->
-        <svg class="cat-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Surprise cat">
-          <g transform="translate(10,10)">
-            <circle cx="90" cy="90" r="70" fill="#FFEDEB"/>
-            <ellipse cx="60" cy="70" rx="18" ry="24" fill="#fff"/>
-            <ellipse cx="120" cy="70" rx="18" ry="24" fill="#fff"/>
-            <circle cx="70" cy="80" r="8" fill="#3b2b2b"/>
-            <circle cx="110" cy="80" r="8" fill="#3b2b2b"/>
-            <path d="M70 115 Q90 135 110 115" stroke="#3b2b2b" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <path d="M30 50 Q45 10 70 40" stroke="#FFE8DA" stroke-width="10" fill="#FFE8DA" stroke-linecap="round"/>
-            <path d="M150 50 Q135 10 110 40" stroke="#FFE8DA" stroke-width="10" fill="#FFE8DA" stroke-linecap="round"/>
-            <text x="28" y="165" font-size="18" fill="#7b3b60" font-weight="700">Surprise!</text>
-          </g>
-        </svg>
-      </div>
-    </section>
+  </main>
+</div>
 
-  </div>
-
-  <!-- Audio file must be music.mp3 in same folder -->
-  <audio id="bgMusic" src="music.mp3" preload="auto"></audio>
-
-  <!-- Debug box (will show audio load/play status) -->
-  <div id="debug" aria-hidden="false">
-    <b>Debug status</b>
-    <div id="dbg-audio">Audio: checking…</div>
-    <div id="dbg-play">Play attempts: 0</div>
-    <div id="dbg-errors" style="margin-top:6px;color:#ffd2d2"></div>
-  </div>
+<!-- Audio -->
+<audio id="bgMusic" src="music.mp3" preload="auto"></audio>
 
 <script>
-/* ============================
-   Main + Interactive Second Page
-   ============================ */
+/* ============================================================
+   TYPEWRITER TEXT
+============================================================ */
+const TEXT = `Bhaiii tysm for guiding me and explaining things to me for hours... (your full message here)`;
 
-const TEXT = `Bhaiii tysm for guiding me and explaining things to me for hours like literally saving me every single time. And fr tg that you initiated that convo in the Live Insaan server varna hum aaj dost hi nahi hote ;-; (but aap catfish hote hote bach gaye 💀).
-
-Anyways ab toh we homies bro daily tea spilling aur aapko gossip karne mein majboor kar diya hai humne lol 😂.
-
-You’re genuinely an amazing and nice guy, sabka aur mera acha sochne ke liye dhanyawaad! Just be that way always… bas thoda gym shym jao aur body banao kya pata koi aapko ched de toh Cynthia poch nahi payegi 💔💀.
-
-Lwky love your music taste ekdum slayyy (95% match 🥹) and your crazy humor 💀.
-
-Waise Sorry but I drag you into all my kands because bro… ab toh you are the fire brigade aka Taarak Mehta 😭🙏 and main obviously Jethiya 😃 (ik ye line sachme ajeeb thi).
-
-God bless you Bhauu! Enjoy your special day.
-
-And all the bestest for tmrw's physics paper AAG LAGA DENAAA 🔥
-
-Once Again Happiest birthday Garvitaa 🎀`;
-
-const target = document.getElementById('message');
-let idx = 0;
-const TYPE_SPEED = 24;
-
-function typeStep(){
-  if(idx >= TEXT.length) {
-    // reveal "open second" maybe
-    document.getElementById('openSecond').disabled = false;
-    return;
-  }
-  const ch = TEXT[idx++];
-  target.innerHTML += (ch === '\n' ? '<br>' : ch);
-  let extra = 0;
-  if (".!?".includes(ch)) extra = 140;
-  else if (",;".includes(ch)) extra = 50;
-  setTimeout(typeStep, TYPE_SPEED + extra);
-}
-
-/* confetti (small) */
-function spawnConfettiBurst(x,y,count=18){
-  for(let i=0;i<count;i++){
-    const el = document.createElement('div');
-    el.className = 'confetti';
-    const size = 6 + Math.random()*10;
-    el.style.width = size+'px';
-    el.style.height = (size*0.6)+'px';
-    el.style.left = (x + (Math.random()*40-20)) + 'px';
-    el.style.top  = (y + (Math.random()*20-10)) + 'px';
-    el.style.background = confettiColor();
-    el.style.transform = `rotate(${Math.random()*360}deg)`;
-    document.body.appendChild(el);
-    setTimeout(()=> el.remove(), 2200);
+const msg = document.getElementById("message");
+let i = 0;
+function type(){
+  if(i < TEXT.length){
+    const ch = TEXT[i++];
+    msg.innerHTML += (ch === "\n" ? "<br>" : ch);
+    setTimeout(type, 20 + (".!?".includes(ch) ? 140 : (",;".includes(ch) ? 60 : 0)));
   }
 }
-function confettiColor(){
-  const palette = ['#FFB6C1','#FFD1A9','#C6E6FF','#EAD7FF','#B8F3D6','#FFF3A6'];
-  return palette[Math.floor(Math.random()*palette.length)];
-}
 
-/* --- UI elements --- */
-const musicBtn = document.getElementById('musicBtn');
-const bgm = document.getElementById('bgMusic');
+/* ============================================================
+   AUDIO + PAGE TRANSITION
+============================================================ */
+const musicBtn = document.getElementById("musicBtn");
+const bgm = document.getElementById("bgMusic");
 
-const dbgAudio = document.getElementById('dbg-audio');
-const dbgPlay = document.getElementById('dbg-play');
-const dbgErrors = document.getElementById('dbg-errors');
+musicBtn.addEventListener("click", async ()=>{
+  try{ await bgm.play(); }catch(e){}
+  bgm.loop = true;
+  bgm.volume = 0.85;
 
-let playAttempts = 0;
+  if(i === 0) setTimeout(type, 300);
 
-function updateDebug(){
-  dbgAudio.textContent = `Audio src: ${bgm.src ? bgm.src.split('/').pop() : '(no src)' } — readyState=${bgm.readyState}`;
-  dbgPlay.textContent = `Play attempts: ${playAttempts}`;
-}
-
-bgm.addEventListener('canplaythrough', ()=> { updateDebug(); dbgAudio.textContent = dbgAudio.textContent + ' (canplaythrough)'; }, { once: true });
-bgm.addEventListener('loadeddata', ()=> updateDebug());
-bgm.addEventListener('error', (ev)=> {
-  dbgErrors.textContent = 'Audio load error — file missing or 404. Check music.mp3 exists and name is exact.';
-  updateDebug();
-});
-
-musicBtn.addEventListener('click', async () => {
-  playAttempts++;
-  updateDebug();
-  dbgErrors.textContent = '';
-  try {
-    await bgm.play();
-    bgm.loop = true;
-    bgm.volume = 0.82;
-    dbgAudio.textContent = dbgAudio.textContent + ' (playing)';
-  } catch(err){
-    dbgErrors.textContent = 'Play blocked by browser or file issue — check debug console.';
-    console.warn('Audio play error:', err);
-  }
-
-  // start typewriter (only once)
-  if(idx === 0){
-    setTimeout(typeStep, 300);
-  }
-
-  // confetti burst near button
-  const r = musicBtn.getBoundingClientRect();
-  spawnConfettiBurst(r.left + r.width/2, r.top + r.height/2, 22);
-
-  // button UI
   musicBtn.disabled = true;
-  musicBtn.textContent = '🎵 Playing...';
-  musicBtn.classList.add('played');
+  musicBtn.textContent = "🎵 Playing...";
+  musicBtn.classList.add("played");
 
-  updateDebug();
+  // switch to Page 2 after typing finishes:
+  setTimeout(()=>{ 
+    document.getElementById("page1").style.display="none";
+    document.getElementById("page2").style.display="block";
+    spawnBalloons();
+  }, 5000);
 });
 
-/* open second page */
-const openSecond = document.getElementById('openSecond');
-const mainCard = document.getElementById('mainCard');
-const secondPage = document.getElementById('secondPage');
-const backBtn = document.getElementById('backBtn');
-
-openSecond.addEventListener('click', ()=> openInteractivePage());
-backBtn.addEventListener('click', ()=> closeInteractivePage());
-
-// also open when typewriter finishes (small delay)
-function openInteractivePage(){
-  mainCard.style.transform = 'translateY(-10px) scale(.98)';
-  mainCard.style.opacity = '0.04';
-  secondPage.style.display = 'block';
-  secondPage.setAttribute('aria-hidden','false');
-  setTimeout(()=> secondPage.style.opacity = 1, 10);
-}
-function closeInteractivePage(){
-  secondPage.style.display = 'none';
-  secondPage.setAttribute('aria-hidden','true');
-  mainCard.style.transform = '';
-  mainCard.style.opacity = '';
-}
-
-/* ---------- Interactive bits ---------- */
-
-/* Runaway button */
-const runBtn = document.getElementById('runBtn');
-let runMargin = 18;
-runBtn.addEventListener('mouseover', (e)=>{
-  const area = runBtn.getBoundingClientRect();
-  const parent = runBtn.parentElement.getBoundingClientRect();
-  // random new pos inside parent panel
-  const panel = runBtn.closest('.panel');
-  const pRect = panel.getBoundingClientRect();
-  const maxX = pRect.width - runBtn.offsetWidth - 12;
-  const maxY = pRect.height - runBtn.offsetHeight - 12;
-  const nx = Math.random()*maxX;
-  const ny = Math.random()*maxY;
-  runBtn.style.position = 'absolute';
-  runBtn.style.left = nx + 'px';
-  runBtn.style.top = ny + 'px';
-  runBtn.style.transition = 'left .18s ease, top .18s ease, transform .12s';
-});
-runBtn.addEventListener('click', ()=> {
-  // if they actually click it (rare) — reward them
-  spawnConfettiBurst(runBtn.getBoundingClientRect().left + runBtn.offsetWidth/2, runBtn.getBoundingClientRect().top + runBtn.offsetHeight/2, 30);
-  alert('Okay you caught me — here is a bonus hug 🤗');
-});
-
-/* Tap area for confetti */
-const tapArea = document.getElementById('tapArea');
-tapArea.addEventListener('click', (ev)=>{
-  const r = tapArea.getBoundingClientRect();
-  spawnConfettiBurst(r.left + r.width/2 + (Math.random()*80-40), r.top + r.height/2 + (Math.random()*80-40), 28);
-});
-
-/* Auto confetti toggle */
-const toggleAuto = document.getElementById('toggleAuto');
-let autoConfetti = false;
-let autoInt = null;
-toggleAuto.addEventListener('click', ()=>{
-  autoConfetti = !autoConfetti;
-  toggleAuto.textContent = autoConfetti ? 'On' : 'Off';
-  if(autoConfetti){
-    autoInt = setInterval(()=> {
-      // random place
-      const x = window.innerWidth * Math.random();
-      const y = window.innerHeight * Math.random() * 0.6;
-      spawnConfettiBurst(x,y, 12 + Math.floor(Math.random()*12));
-    }, 1350);
-  } else {
-    clearInterval(autoInt);
-    autoInt = null;
+/* ============================================================
+   CONFETTI + SPARKLES (shared)
+============================================================ */
+function spawnConfetti(x,y,count=20){
+  for(let k=0;k<count;k++){
+    const d=document.createElement("div");
+    d.className="confetti";
+    const size=6+Math.random()*10;
+    d.style.width=size+"px";
+    d.style.height=(size*0.6)+"px";
+    d.style.left=(x+Math.random()*40-20)+"px";
+    d.style.top=(y+Math.random()*20-10)+"px";
+    d.style.background = ["#FFB6C1","#FFD1A9","#C6E6FF","#EAD7FF","#B8F3D6"][Math.floor(Math.random()*5)];
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(),2000);
   }
-});
-
-/* Balloon pop with web-audio "pop" and reveal cat */
-const balloon = document.getElementById('balloon');
-const cat = document.getElementById('cat');
-
-// create a tiny pop sound using Web Audio
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
-function playPop(){
-  if(!audioCtx) audioCtx = new AudioCtx();
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = 'triangle';
-  o.frequency.setValueAtTime(350, audioCtx.currentTime);
-  o.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.12);
-  g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.5, audioCtx.currentTime + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(); o.stop(audioCtx.currentTime + 0.18);
 }
 
-let popped = false;
-balloon.addEventListener('click', (e)=>{
-  if(popped) return;
-  popped = true;
-  // quick pop animation
-  balloon.style.transform = 'scale(0.2) rotate(20deg)';
-  balloon.style.transition = 'transform .18s cubic-bezier(.2,.9,.3,1), opacity .18s';
-  balloon.style.opacity = '0';
-  playPop();
-  // spawn confetti where balloon was
-  const r = balloon.getBoundingClientRect();
-  spawnConfettiBurst(r.left + r.width/2, r.top + r.height/2, 48);
-  // reveal cat
-  setTimeout(()=> {
-    cat.classList.add('show');
-    // small cat bounce
-    cat.animate([{transform: 'translateY(10px)'}, {transform:'translateY(0)'}], {duration: 420, easing:'cubic-bezier(.2,.9,.3,1)'});
-  }, 200);
+document.addEventListener("pointermove",e=>{
+  if(Math.random()>0.2)return;
+  const s=document.createElement("div");
+  s.className="spark";
+  s.style.left=e.pageX+"px";
+  s.style.top=e.pageY+"px";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),1200);
 });
 
-/* Surprise cat click — extra confetti */
-cat.addEventListener('click', ()=>{
-  const r = cat.getBoundingClientRect();
-  spawnConfettiBurst(r.left + r.width/2, r.top + r.height/2, 40);
-});
+/* ============================================================
+   PAGE 2 — BALLOONS + RUNNING BUTTON
+============================================================ */
 
-/* small helpful console messages for developer */
-console.info('Card loaded. Interactive second page ready. Ensure music.mp3 exists in same folder (case-sensitive).');
-updateDebug();
+function spawnBalloons(){
+  const area = document.getElementById("balloonArea");
+  for(let b=0;b<6;b++){
+    const balloon=document.createElement("div");
+    balloon.className="balloon";
+    balloon.style.left = (20 + Math.random()*80) + "%";
+    balloon.style.top = (20 + Math.random()*60) + "px";
 
-/* allow dblclick confetti on whole page */
-document.addEventListener('dblclick', (e)=> spawnConfettiBurst(e.pageX, e.pageY, 28));
+    balloon.addEventListener("click", e=>{
+      balloon.style.animation = "popBalloon .3s forwards";
+      spawnConfetti(e.pageX,e.pageY,25);
+      setTimeout(()=>balloon.remove(),300);
+    });
 
-/* also allow opening second page after typewriter ends automatically (optional) */
-(function waitForEnd(){
-  // when typing finishes (idx >= TEXT.length) show open button enabled
-  if(idx >= TEXT.length){
-    document.getElementById('openSecond').disabled = false;
-    return;
+    area.appendChild(balloon);
   }
-  setTimeout(waitForEnd, 200);
-})();
+}
 
-// initially disable openSecond until user taps or it's okay
-document.getElementById('openSecond').disabled = true;
+/* RUNAWAY BUTTON */
+const runBtn = document.getElementById("runBtn");
+runBtn.addEventListener("mouseover", ()=>{
+  const x = Math.random()*220 - 110;
+  const y = Math.random()*140 - 70;
+  runBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+runBtn.addEventListener("click", e=>{
+  spawnConfetti(e.pageX,e.pageY,35);
+});
 </script>
 
 </body>
